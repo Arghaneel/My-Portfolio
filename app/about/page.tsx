@@ -45,7 +45,7 @@ export default function About() {
         >
           <div className="relative w-full max-w-sm aspect-square rounded-3xl overflow-hidden border-2 border-border shadow-lg group">
             <Image
-              src="/images/profile.png"
+              src="/images/Profile.png"
               alt={siteConfig.name}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-500"

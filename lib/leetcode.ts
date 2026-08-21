@@ -91,7 +91,7 @@ mockLeetCodeStats.submissionCalendar = generateMockCalendar();
 
 export async function fetchLeetCodeStats(username: string): Promise<LeetCodeStats> {
   try {
-    const res = await fetch(`https://leetcode-stats-api.herokuapp.com/${username}`, {
+    const res = await fetch(`https://alfa-leetcode-api.onrender.com/userProfile/${username}`, {
       next: { revalidate: 1800 }, // Cache for 30 minutes
     });
 
@@ -100,24 +100,79 @@ export async function fetchLeetCodeStats(username: string): Promise<LeetCodeStat
     }
 
     const data = await res.json();
-    if (data.status !== "success") {
-      throw new Error(data.message || "LeetCode stats fetch failed");
-    }
+    
+    // Map recent submissions
+    const submissions = (data.recentSubmissions || []).slice(0, 5).map((sub: any) => {
+      const ts = parseInt(sub.timestamp);
+      const diffMs = Date.now() - ts * 1000;
+      const diffMins = Math.floor(diffMs / (1000 * 60));
+      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      
+      let timeStr = "recently";
+      if (diffMins < 60) {
+        timeStr = `${diffMins} min${diffMins !== 1 ? "s" : ""} ago`;
+      } else if (diffHours < 24) {
+        timeStr = `${diffHours} hour${diffHours !== 1 ? "s" : ""} ago`;
+      } else {
+        timeStr = `${diffDays} day${diffDays !== 1 ? "s" : ""} ago`;
+      }
 
-    // Merge live data with mock details (for things like contest rating and submissions list)
+      // Simple difficulty heuristic based on common problems, or fallback to Medium
+      let difficulty: "Easy" | "Medium" | "Hard" = "Medium";
+      const titleLower = sub.title.toLowerCase();
+      if (
+        titleLower.includes("two sum") ||
+        titleLower.includes("palindrome") ||
+        titleLower.includes("reverse") ||
+        titleLower.includes("merge") ||
+        titleLower.includes("common prefix") ||
+        titleLower.includes("sqrt") ||
+        titleLower.includes("unique character") ||
+        titleLower.includes("remove") ||
+        titleLower.includes("search insert")
+      ) {
+        difficulty = "Easy";
+      } else if (
+        titleLower.includes("median") ||
+        titleLower.includes("regular expression") ||
+        titleLower.includes("merge k sorted") ||
+        titleLower.includes("largest rectangle") ||
+        titleLower.includes("minimum window")
+      ) {
+        difficulty = "Hard";
+      }
+
+      const langKey = sub.lang.toLowerCase();
+      let language = sub.lang;
+      if (langKey.startsWith("python")) language = "Python";
+      else if (langKey === "cpp") language = "C++";
+      else if (langKey === "javascript") language = "JavaScript";
+      else if (langKey === "typescript") language = "TypeScript";
+      else if (langKey === "mysql" || langKey === "postgresql") language = "SQL";
+
+      return {
+        title: sub.title,
+        status: sub.statusDisplay === "Accepted" ? "Accepted" : "Wrong Answer",
+        difficulty,
+        language,
+        time: timeStr,
+      };
+    });
+
     return {
-      totalSolved: data.totalSolved,
-      totalQuestions: data.totalQuestions,
-      easySolved: data.easySolved,
-      totalEasy: data.totalEasy,
-      mediumSolved: data.mediumSolved,
-      totalMedium: data.totalMedium,
-      hardSolved: data.hardSolved,
-      totalHard: data.totalHard,
+      totalSolved: data.totalSolved || 0,
+      totalQuestions: data.totalQuestions || 4000,
+      easySolved: data.easySolved || 0,
+      totalEasy: data.totalEasy || 1000,
+      mediumSolved: data.mediumSolved || 0,
+      totalMedium: data.totalMedium || 2000,
+      hardSolved: data.hardSolved || 0,
+      totalHard: data.totalHard || 1000,
       ranking: data.ranking || mockLeetCodeStats.ranking,
       contestRating: mockLeetCodeStats.contestRating, // mock field
       streak: mockLeetCodeStats.streak, // mock field
-      submissions: mockLeetCodeStats.submissions, // mock field
+      submissions,
       submissionCalendar: data.submissionCalendar && Object.keys(data.submissionCalendar).length > 0
         ? data.submissionCalendar
         : mockLeetCodeStats.submissionCalendar,

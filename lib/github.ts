@@ -45,7 +45,7 @@ export interface GithubStats {
 // Custom Mock Data for Fallback
 const mockGithubStats: GithubStats = {
   profile: {
-    avatarUrl: "/images/profile.png",
+    avatarUrl: "/images/Profile.png",
     name: "Arghaneel Das",
     bio: "Computer Science Student & President of OSCode Atria. IoT, Web Development & AI enthusiast.",
     reposCount: 24,

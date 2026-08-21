@@ -5,7 +5,7 @@ export const siteConfig = {
   email: "arghaneel@gmail.com",
   location: "Bangalore, India",
   socials: {
-    github: "https://github.com/arghaneel-das",
+    github: "https://github.com/Arghaneel",
     linkedin: "https://linkedin.com/in/arghaneel-das",
     instagram: "https://instagram.com/arghaneel_das",
     email: "mailto:arghaneel@gmail.com",

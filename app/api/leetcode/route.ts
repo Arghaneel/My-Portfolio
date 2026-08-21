@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { fetchLeetCodeStats } from "@/lib/leetcode";
 
 export async function GET() {
-  const username = process.env.LEETCODE_USERNAME || "arghaneel-das";
+  const username = process.env.LEETCODE_USERNAME || "arghaneel_das";
 
   try {
     const stats = await fetchLeetCodeStats(username);

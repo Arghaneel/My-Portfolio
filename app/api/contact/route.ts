@@ -16,7 +16,7 @@ export async function POST(request: Request) {
 
     const { name, email, subject, message } = validationResult.data;
     const resendApiKey = process.env.RESEND_API_KEY;
-    const toEmail = process.env.CONTACT_TO_EMAIL || "arghaneel@gmail.com";
+    const toEmail = process.env.CONTACT_TO_EMAIL || "arghaneeldas29@gmail.com";
 
     // 2. Send email via Resend API (using native fetch to avoid dependencies bloat)
     if (resendApiKey) {
