@@ -8,9 +8,9 @@ export interface Experience {
 
 export const experiences: Experience[] = [
   {
-    role: "President",
+    role: "Vice-President",
     organization: "OSCode Atria",
-    period: "2026 – Present",
+    period: "2025 – Present",
     description: "Leading the premier student developer community of Atria Institute of Technology.",
     details: [
       "Mentored a team of 20+ core committee members in organizing tech hackathons, workshops, and bootcamps.",
@@ -20,7 +20,7 @@ export const experiences: Experience[] = [
     ],
   },
   {
-    role: "Event Management Lead",
+    role: "Event Operations Lead",
     organization: "OSCode Atria",
     period: "2025 – 2026",
     description: "Coordinating technical meetups, hands-on workshops, and developer bootcamps.",
@@ -32,7 +32,7 @@ export const experiences: Experience[] = [
     ],
   },
   {
-    role: "Placement Coordinator",
+    role: "Student Placement Coordinator",
     organization: "Computer Science Department, Atria Institute of Technology",
     period: "2024 – Present",
     description: "Liaison between the college placement cell, recruiting companies, and students.",
@@ -62,11 +62,6 @@ export const certifications: Certification[] = [
     title: "Cisco Networking Essentials",
     issuer: "Cisco",
     year: "2025",
-  },
-  {
-    title: "NPTEL Data Structures and Algorithms in Java",
-    issuer: "NPTEL / IIT Madras",
-    year: "2024",
   },
   {
     title: "IBM Python for Data Science",

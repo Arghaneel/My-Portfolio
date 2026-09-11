@@ -39,7 +39,7 @@ export default function Contact() {
           <div className="space-y-4">
             <h2 className="text-2xl font-bold text-foreground">Let's Connect</h2>
             <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-              If you are interested in collaborating on IoT solutions, web applications, or community developer workshops, my inbox is always open. I will do my best to respond within 24 hours.
+              If you are interested in collaborating on web applications, or community developer workshops, my inbox is always open. I will do my best to respond within 24 hours.
             </p>
           </div>
 

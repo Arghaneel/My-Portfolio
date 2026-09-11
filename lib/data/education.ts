@@ -14,8 +14,8 @@ export const educationList: Education[] = [
     fieldOfStudy: "Computer Science & Engineering",
     institution: "Atria Institute of Technology",
     location: "Bangalore, India",
-    period: "2024 – 2026 (Expected)",
-    gpa: "8.85 / 10.0 CGPA",
+    period: "2024 – 2028 (Expected)",
+    gpa: "9.38 / 10.0 CGPA",
     details: [
       "Specialized in Software Engineering, Advanced Database Systems, and Intelligent Systems.",
       "Active member and lead in OSCode, the core developer community.",
