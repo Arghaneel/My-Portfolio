@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Globe, Mail, Heart } from "lucide-react";
+import { Mail } from "lucide-react";
+import { GitHubIcon, LinkedInIcon, LeetCodeIcon, InstagramIcon } from "@/components/social-icons";
 import { siteConfig } from "@/lib/data/site-config";
 
 export default function Footer() {
@@ -15,7 +16,7 @@ export default function Footer() {
               {siteConfig.name}
             </h3>
             <p className="text-sm text-muted-foreground max-w-sm leading-relaxed">
-              Computer Science student building full-stack web architectures, intelligent AI algorithms, and connected IoT solutions.
+              Computer Science student at Atria Institute of Technology and Applied AI Intern at DeepAgentLabs, building practical software, IoT devices and AI-powered tools.
             </p>
             <div className="flex items-center gap-4 pt-2">
               <a
@@ -25,7 +26,7 @@ export default function Footer() {
                 className="p-2 rounded-full bg-secondary hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all duration-200"
                 aria-label="GitHub"
               >
-                <Globe size={18} />
+                <GitHubIcon size={18} />
               </a>
               <a
                 href={siteConfig.socials.linkedin}
@@ -34,7 +35,16 @@ export default function Footer() {
                 className="p-2 rounded-full bg-secondary hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all duration-200"
                 aria-label="LinkedIn"
               >
-                <svg viewBox="0 0 24 24" className="fill-current" style={{ width: 18, height: 18 }} xmlns="http://www.w3.org/2000/svg"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                <LinkedInIcon size={18} />
+              </a>
+              <a
+                href={siteConfig.socials.leetcode}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 rounded-full bg-secondary hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all duration-200"
+                aria-label="LeetCode"
+              >
+                <LeetCodeIcon size={18} />
               </a>
               <a
                 href={siteConfig.socials.instagram}
@@ -43,7 +53,7 @@ export default function Footer() {
                 className="p-2 rounded-full bg-secondary hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all duration-200"
                 aria-label="Instagram"
               >
-                <svg viewBox="0 0 24 24" className="fill-none stroke-current" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 18, height: 18 }} xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                <InstagramIcon size={18} />
               </a>
               <a
                 href={siteConfig.socials.email}
@@ -82,7 +92,7 @@ export default function Footer() {
                   href="/experience"
                   className="text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
-                  Experience Timeline
+                  Experience & Achievements
                 </Link>
               </li>
               <li>
@@ -104,17 +114,17 @@ export default function Footer() {
             <ul className="space-y-2.5">
               <li>
                 <a
-                  href="/resume.pdf"
+                  href={siteConfig.resumeUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
-                  Curriculum Vitae
+                  Resume (PDF)
                 </a>
               </li>
               <li>
                 <a
-                  href="https://github.com/arghaneel-das"
+                  href={siteConfig.socials.github}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-muted-foreground hover:text-primary transition-colors"
@@ -139,8 +149,8 @@ export default function Footer() {
           <p className="text-xs text-muted-foreground text-center sm:text-left">
             © {currentYear} {siteConfig.name}. All rights reserved.
           </p>
-          <p className="text-xs text-muted-foreground flex items-center gap-1 text-center sm:text-left">
-            Built with Next.js & Tailwind by Antigravity <Heart size={10} className="text-red-500 fill-red-500 animate-pulse" />
+          <p className="text-xs text-muted-foreground text-center sm:text-left">
+            Designed & built by {siteConfig.name} with Next.js, TypeScript & Tailwind CSS
           </p>
         </div>
       </div>

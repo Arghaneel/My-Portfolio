@@ -4,12 +4,13 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { useGithubStats } from "@/hooks/use-github-stats";
 import { useLeetcodeStats } from "@/hooks/use-leetcode-stats";
-import { Globe, Code, Users, Award, Zap, AlertTriangle, ArrowRight } from "lucide-react";
+import { Code, Award, Zap, AlertTriangle, ArrowRight } from "lucide-react";
+import { GitHubIcon } from "@/components/social-icons";
 import ContributionGraph from "@/components/contribution-graph";
 
 export default function DashboardOverview() {
-  const { data: github, loading: githubLoading, error: githubError } = useGithubStats();
-  const { data: leetcode, loading: leetcodeLoading, error: leetcodeError } = useLeetcodeStats();
+  const { data: github, loading: githubLoading, refreshing, refresh } = useGithubStats();
+  const { data: leetcode, loading: leetcodeLoading } = useLeetcodeStats();
 
   const isStale = github?.stale || leetcode?.stale;
 
@@ -54,7 +55,7 @@ export default function DashboardOverview() {
         {isStale && (
           <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-500 text-xs font-semibold">
             <AlertTriangle size={14} />
-            <span>Using fallback snapshot data</span>
+            <span>Some live data couldn&apos;t be refreshed – showing the last synced values</span>
           </div>
         )}
       </div>
@@ -68,7 +69,7 @@ export default function DashboardOverview() {
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2.5">
                 <div className="p-2 rounded-lg bg-black text-white dark:bg-white dark:text-black">
-                  <Globe size={20} />
+                  <GitHubIcon size={20} />
                 </div>
                 <h2 className="text-lg font-bold text-foreground">GitHub Profile</h2>
               </div>
@@ -90,7 +91,7 @@ export default function DashboardOverview() {
                     <span className="text-xl font-bold text-foreground">{github.profile.reposCount}</span>
                   </div>
                   <div className="p-4 rounded-xl bg-secondary/50">
-                    <span className="text-xs text-muted-foreground block font-medium">Actions</span>
+                    <span className="text-xs text-muted-foreground block font-medium">Contributions</span>
                     <span className="text-xl font-bold text-foreground">{github.contributions.total}</span>
                   </div>
                 </div>
@@ -131,6 +132,10 @@ export default function DashboardOverview() {
               </Link>
             </div>
 
+            {!leetcode && (
+              <p className="text-sm text-muted-foreground">LeetCode stats are temporarily unavailable.</p>
+            )}
+
             {leetcode && (
               <>
                 {/* Problems Solved Progress Circle */}
@@ -148,7 +153,7 @@ export default function DashboardOverview() {
                         <span className="font-semibold">{leetcode.easySolved} / {leetcode.totalEasy}</span>
                       </div>
                       <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
-                        <div className="h-full bg-emerald-500" style={{ width: `${(leetcode.easySolved / leetcode.totalEasy) * 100}%` }} />
+                        <div className="h-full bg-emerald-500" style={{ width: `${leetcode.totalEasy ? (leetcode.easySolved / leetcode.totalEasy) * 100 : 0}%` }} />
                       </div>
                     </div>
                     <div className="space-y-1">
@@ -157,7 +162,7 @@ export default function DashboardOverview() {
                         <span className="font-semibold">{leetcode.mediumSolved} / {leetcode.totalMedium}</span>
                       </div>
                       <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
-                        <div className="h-full bg-amber-500" style={{ width: `${(leetcode.mediumSolved / leetcode.totalMedium) * 100}%` }} />
+                        <div className="h-full bg-amber-500" style={{ width: `${leetcode.totalMedium ? (leetcode.mediumSolved / leetcode.totalMedium) * 100 : 0}%` }} />
                       </div>
                     </div>
                   </div>
@@ -168,14 +173,14 @@ export default function DashboardOverview() {
                     <Award className="text-amber-500" size={20} />
                     <div>
                       <span className="text-[10px] text-muted-foreground block font-medium uppercase">Rating</span>
-                      <span className="text-sm font-bold text-foreground">{leetcode.contestRating}</span>
+                      <span className="text-sm font-bold text-foreground">{leetcode.contestRating ?? "Unrated"}</span>
                     </div>
                   </div>
                   <div className="p-4 rounded-xl bg-secondary/50 flex items-center gap-3">
                     <Zap className="text-orange-500" size={20} />
                     <div>
                       <span className="text-[10px] text-muted-foreground block font-medium uppercase">Streak</span>
-                      <span className="text-sm font-bold text-foreground">{leetcode.streak} Days</span>
+                      <span className="text-sm font-bold text-foreground">{leetcode.streak} day{leetcode.streak === 1 ? "" : "s"}</span>
                     </div>
                   </div>
                 </div>
@@ -187,7 +192,15 @@ export default function DashboardOverview() {
 
       {github && (
         <div className="mt-8">
-          <ContributionGraph days={github.contributions.calendar} totalContributions={github.contributions.total} />
+          <ContributionGraph
+            days={github.contributions.calendar}
+            totalContributions={github.contributions.total}
+            username={github.profile.login}
+            fetchedAt={github.fetchedAt}
+            source={github.contributions.source}
+            refreshing={refreshing}
+            onRefresh={refresh}
+          />
         </div>
       )}
     </div>

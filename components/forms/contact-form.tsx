@@ -6,12 +6,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { contactFormSchema, ContactFormData } from "@/lib/validations";
+import { siteConfig } from "@/lib/data/site-config";
 
 export default function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{
     type: "success" | "error";
     message: string;
+    /** Pre-filled mailto link so the visitor can still reach me if sending fails. */
+    mailto?: string;
   } | null>(null);
 
   const {
@@ -33,10 +36,18 @@ export default function ContactForm() {
         body: JSON.stringify(data),
       });
 
-      const result = await response.json();
+      const result = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        throw new Error(result.error || "Something went wrong.");
+        const mailto = `mailto:${siteConfig.email}?subject=${encodeURIComponent(data.subject)}&body=${encodeURIComponent(
+          `${data.message}\n\n— ${data.name} (${data.email})`
+        )}`;
+        setSubmitStatus({
+          type: "error",
+          message: result.error || "Your message couldn't be sent.",
+          mailto,
+        });
+        return;
       }
 
       setSubmitStatus({
@@ -44,11 +55,12 @@ export default function ContactForm() {
         message: result.message || "Message sent successfully!",
       });
       reset(); // Clear form fields
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
       setSubmitStatus({
         type: "error",
-        message: err.message || "Failed to send message. Please try again.",
+        message: "Network error – your message couldn't be sent.",
+        mailto: `mailto:${siteConfig.email}`,
       });
     } finally {
       setIsSubmitting(false);
@@ -75,7 +87,18 @@ export default function ContactForm() {
             ) : (
               <AlertCircle className="flex-shrink-0 mt-0.5" size={18} />
             )}
-            <div className="text-sm font-medium">{submitStatus.message}</div>
+            <div className="text-sm font-medium">
+              {submitStatus.message}
+              {submitStatus.mailto && (
+                <>
+                  {" "}
+                  <a href={submitStatus.mailto} className="underline font-semibold">
+                    Email me directly at {siteConfig.email}
+                  </a>{" "}
+                  – your message is already filled in.
+                </>
+              )}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

@@ -3,11 +3,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useGithubStats } from "@/hooks/use-github-stats";
-import { Globe, Star, GitFork, Users, BookOpen, ExternalLink, Calendar } from "lucide-react";
+import { Star, GitFork, ExternalLink } from "lucide-react";
+import { GitHubIcon } from "@/components/social-icons";
 import ContributionGraph from "@/components/contribution-graph";
 
 export default function GitHubDashboard() {
-  const { data: github, loading, error } = useGithubStats();
+  const { data: github, loading, error, refreshing, refresh } = useGithubStats();
 
   const dashboardNav = (
     <div className="flex gap-2 border-b border-border/40 pb-4 mb-8">
@@ -48,6 +49,11 @@ export default function GitHubDashboard() {
       <div>
         <h1 className="text-4xl font-extrabold text-foreground">GitHub Statistics</h1>
         <p className="text-muted-foreground text-sm mt-1">Live metrics from repository activity</p>
+        {github.stale && (
+          <p className="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-500 text-xs font-semibold">
+            GitHub couldn&apos;t be reached for some data – showing the last synced values.
+          </p>
+        )}
       </div>
 
       <div className="mt-8">{dashboardNav}</div>
@@ -73,7 +79,7 @@ export default function GitHubDashboard() {
                 rel="noopener noreferrer"
                 className="text-xs text-muted-foreground hover:text-primary inline-flex items-center gap-1 mt-1"
               >
-                @arghaneel-das <ExternalLink size={10} />
+                @{github.profile.login} <ExternalLink size={10} />
               </a>
             </div>
             <p className="text-xs sm:text-sm text-muted-foreground leading-normal px-2">
@@ -98,7 +104,7 @@ export default function GitHubDashboard() {
               className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/95 transition-all shadow-sm"
             >
               View GitHub Profile
-              <Globe size={16} />
+              <GitHubIcon size={16} />
             </a>
           </div>
 
@@ -124,7 +130,15 @@ export default function GitHubDashboard() {
         {/* Right Side: Contribution graph & Recent repos */}
         <div className="lg:col-span-8 space-y-6">
           {/* Calendar */}
-          <ContributionGraph days={github.contributions.calendar} totalContributions={github.contributions.total} />
+          <ContributionGraph
+            days={github.contributions.calendar}
+            totalContributions={github.contributions.total}
+            username={github.profile.login}
+            fetchedAt={github.fetchedAt}
+            source={github.contributions.source}
+            refreshing={refreshing}
+            onRefresh={refresh}
+          />
 
           {/* Recent Repos */}
           <div className="space-y-4">

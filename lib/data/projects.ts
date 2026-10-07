@@ -1,107 +1,88 @@
+export type ProjectCategory = "IoT" | "Desktop App" | "AI / AgriTech" | "Mobile App";
+
 export interface Project {
   slug: string;
   title: string;
   tagline: string;
   description: string;
-  category: "Web Development" | "AI/ML" | "IoT" | "Full Stack";
+  category: ProjectCategory;
+  /** Short context line, e.g. "Hackathon project" or "Course project". */
+  context?: string;
   techStack: string[];
   keyFeatures: string[];
+  /** Real screenshots/photos only. Leave empty to show a generated cover. */
   images: string[];
   liveDemoUrl?: string;
   githubUrl?: string;
 }
 
+// Only real projects with claims that match the resume.
 export const projects: Project[] = [
-  {
-    slug: "jeevandhara",
-    title: "Jeevandhara",
-    tagline: "AI-Powered Agriculture Platform for Smart Farming",
-    description:
-      "Jeevandhara is an intelligent agricultural solution designed to help farmers detect crop diseases early, receive precise local weather predictions, and manage automated irrigation alerts. By leveraging computer vision and real-time sensor analytics, Jeevandhara significantly increases crop yield and reduces resource wastage.",
-    category: "AI/ML",
-    techStack: ["Python", "Flask", "MongoDB", "PyTorch", "Tailwind CSS"],
-    keyFeatures: [
-      "Real-time crop leaf disease detection using a custom CNN image classifier.",
-      "Localized weather forecasting integration via OpenWeather API.",
-      "Smart irrigation alerts based on soil moisture levels and heat index.",
-      "Interactive farmer discussion forum with translation support.",
-      "Simple, multilingual dashboard optimized for rural connectivity.",
-    ],
-    images: [
-      "/images/jeevandhara_1.png",
-      "/images/jeevandhara_2.png",
-      "/images/jeevandhara_3.png",
-    ],
-    liveDemoUrl: "https://jeevandhara-smart-farm.vercel.app",
-    githubUrl: "https://github.com/arghaneel-das/jeevandhara",
-  },
   {
     slug: "sixthsense",
     title: "SixthSense",
-    tagline: "IoT Wearable Device for the Visually Impaired",
+    tagline: "Wearable smart navigation device for real-time obstacle detection",
     description:
-      "SixthSense is an innovative IoT wearable device built to assist visually impaired individuals navigate their surroundings safely. Using ultrasonic sensors, haptic motors, and audio guidance, the device detects obstacles and calculates proximity to alert the user of impending danger.",
+      "A wearable navigation aid that detects head-level obstacles in real time. Ultrasonic sensors feed an ESP32 microcontroller, which warns the wearer through LED and audio alerts as soon as something is in the way.",
     category: "IoT",
-    techStack: ["ESP32", "Arduino IDE", "C", "C++", "Bluetooth Low Energy"],
+    techStack: ["ESP32", "C++", "Arduino", "Ultrasonic sensors"],
     keyFeatures: [
-      "Proximity-based ultrasonic obstacle detection up to 4 meters away.",
-      "Variable haptic feedback frequency depending on distance of obstacles.",
-      "Real-time audio alert notifications broadcast via bone-conduction headphones.",
-      "Emergency SOS button sending GPS location over GSM module.",
-      "Ultra-low power optimization, ensuring over 12 hours of active battery life.",
+      "Real-time, head-level obstacle detection using ultrasonic sensors and an ESP32.",
+      "LED and audio alert mechanisms that notify the user when an obstacle is detected.",
+      "Wearable form factor designed for hands-free use.",
     ],
-    images: [
-      "/images/sixthsense_1.png",
-      "/images/sixthsense_2.png",
-      "/images/sixthsense_3.png",
-    ],
-    liveDemoUrl: "https://github.com/arghaneel-das/sixthsense", // Fallback if no web demo for hardware
-    githubUrl: "https://github.com/arghaneel-das/sixthsense",
+    images: [],
   },
   {
-    slug: "indian-folk-art-marketplace",
-    title: "Indian Folk Art Marketplace",
-    tagline: "Empowering Rural Artisans via Secure Digital Commerce",
+    slug: "electricity-bill-generator",
+    title: "ElectriFlow – Electricity Bill Generator",
+    tagline: "Desktop app that digitises electricity billing, from meter reading to invoice",
     description:
-      "A dedicated e-commerce platform that directly connects rural Indian artisans with global art collectors. The platform eliminates intermediaries, guarantees fair pricing, and showcases traditional folk art forms such as Madhubani, Warli, and Pattachitra with rich cultural stories.",
-    category: "Web Development",
-    techStack: ["Node.js", "Express.js", "MongoDB", "Vanilla JS", "CSS3"],
+      "A Java Swing desktop application that digitises an electricity utility's workflow: customer registration, meter-reading entry, slab-based bill calculation, payment collection and invoice generation, with role-based access control. Data lives in MySQL via JDBC, organised with Object-Oriented models and DAOs.",
+    category: "Desktop App",
+    context: "Team project",
+    techStack: ["Java 17", "Swing", "FlatLaf", "JDBC", "MySQL"],
     keyFeatures: [
-      "Direct artisan onboarding dashboard with simplified listing tools.",
-      "Secure payment processing integration via Razorpay.",
-      "Cultural storytelling panels detailing the origin and history of each art piece.",
-      "Category and location filters allowing users to search by specific folk art forms.",
-      "Fully responsive and lightweight UI, running smoothly on mobile connections.",
+      "Role-based logins: Admin, Employee and Viewer portals, plus a separate Customer portal.",
+      "Slab-based billing engine with separate rules for Domestic and Commercial customers.",
+      "Admin control room with KPI stats, configurable slab and tax rates, JSON backup/restore and CSV export.",
+      "Usage analytics with custom line, bar and donut charts for bill trends and consumption.",
+      "Invoice generation with print-to-PDF and HTML export.",
+      "Demo mode that runs without MySQL using in-memory data.",
     ],
-    images: [
-      "/images/folkart_1.png",
-      "/images/folkart_2.png",
-      "/images/folkart_3.png",
-    ],
-    liveDemoUrl: "https://indian-folkart-marketplace.vercel.app",
-    githubUrl: "https://github.com/arghaneel-das/indian-folk-art-marketplace",
+    images: [],
+    githubUrl: "https://github.com/Arghaneel/ELECTRICITY_BILL_GENERATOR-1AT24CS025-1AT24CS029-",
   },
   {
-    slug: "oscode-community-portal",
-    title: "OSCode Community Portal",
-    tagline: "Central Hub for Hackathons, Workshops, and Developer Leaderboards",
+    slug: "carbon-grove",
+    title: "Carbon Grove",
+    tagline: "Gamified mobile app — CODE RED ’25 hackathon finalist",
     description:
-      "A complete community platform built for OSCode Atria. It aggregates student projects, registers attendees for upcoming tech meetups and workshops, and displays a gamified coding leaderboard to promote active open-source contribution.",
-    category: "Full Stack",
-    techStack: ["Next.js 15", "React 19", "MongoDB", "Tailwind CSS", "GitHub API"],
+      "A gamified mobile application built during CODE RED ’25, a national-level 25-hour hackathon at BMSIT&M, where the team qualified for and competed in the final round.",
+    category: "Mobile App",
+    context: "Hackathon project · Finalist",
+    techStack: ["Mobile app", "Gamification"],
     keyFeatures: [
-      "Dynamic dashboard pulling student GitHub repository statistics.",
-      "Automated event registration system with customizable QR-code tickets.",
-      "Gamified community leaderboard based on GitHub PR contributions and workshop attendance.",
-      "Community project gallery with a built-in peer-upvote voting system.",
-      "Integrated announcement feed with Discord webhook sync.",
+      "Built within a 25-hour national-level hackathon.",
+      "Qualified for the final round of CODE RED ’25 (BMSIT&M).",
     ],
-    images: [
-      "/images/oscode_1.png",
-      "/images/oscode_2.png",
-      "/images/oscode_3.png",
+    images: [],
+  },
+  {
+    slug: "jeevandhara",
+    title: "Jeevandhara",
+    tagline: "Platform giving farmers real-time insights and market access",
+    description:
+      "A platform concept that gives farmers real-time insights and market access, with AI-based crop quality analysis. Pitched at the Eureka! pitching competition; the repository contains the project's data-scraping component.",
+    category: "AI / AgriTech",
+    context: "Pitched at Eureka!",
+    techStack: ["Python", "Web scraping"],
+    keyFeatures: [
+      "Real-time insights for farmers.",
+      "Market access for agricultural produce.",
+      "AI-based crop quality analysis (proposed in the pitch).",
     ],
-    liveDemoUrl: "https://oscode-atria.vercel.app",
-    githubUrl: "https://github.com/arghaneel-das/oscode-portal",
+    images: [],
+    githubUrl: "https://github.com/Arghaneel/jeevandhara",
   },
 ];

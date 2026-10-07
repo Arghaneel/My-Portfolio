@@ -2,45 +2,108 @@ export interface Experience {
   role: string;
   organization: string;
   period: string;
+  kind: "Internship" | "Leadership" | "Club";
+  location?: string;
   description: string;
   details: string[];
 }
 
 export const experiences: Experience[] = [
   {
+    role: "Applied AI Intern",
+    organization: "DeepAgentLabs – Cloud Daemon LLC",
+    period: "Sep 2026 – Present",
+    kind: "Internship",
+    location: "Remote",
+    description: "Working on applied AI projects involving agentic systems.",
+    details: [
+      "Contribute to applied AI projects spanning research, prototyping, evaluation, documentation and responsible engineering practices.",
+      "Complete assigned research, engineering, evaluation, documentation and product tasks while communicating progress clearly.",
+      "Collaborate with a distributed team on applied AI initiatives, following approved repositories, data, accounts and AI tools.",
+    ],
+  },
+  {
     role: "Vice-President",
-    organization: "OSCode Atria",
+    organization: "OSCode Club, Atria Institute of Technology",
+    period: "2026 – Present",
+    kind: "Leadership",
+    description: "Leading the college's student developer club.",
+    details: [
+      "Lead and coordinate club initiatives, technical activities and student-focused programs.",
+      "Collaborate with student teams, faculty coordinators and club members to plan and run technical events and community activities.",
+    ],
+  },
+  {
+    role: "Event Coordinator",
+    organization: "OSCode Club, Atria Institute of Technology",
+    period: "2025 – Jul 2026",
+    kind: "Leadership",
+    description: "Planned and ran the club's technical events.",
+    details: [
+      "Led a team of 10 members in planning and executing club events, from ideation through post-event feedback.",
+      "Organised Tech Talks and Seminars that attracted 60+ participants and supported technical learning in the student community.",
+      "Coordinated with faculty, student volunteers and external industry speakers to keep event logistics running smoothly.",
+    ],
+  },
+  {
+    role: "Student Coordinator",
+    organization: "Atria Career Development Centre (CDC)",
     period: "2025 – Present",
-    description: "Leading the premier student developer community of Atria Institute of Technology.",
+    kind: "Leadership",
+    description: "Link between students and the placement department.",
     details: [
-      "Mentored a team of 20+ core committee members in organizing tech hackathons, workshops, and bootcamps.",
-      "Grew the developer community to 500+ active student members across various engineering branches.",
-      "Initiated collaborative open-source projects, training students in Git, GitHub, and professional coding practices.",
-      "Facilitated industry-academic partnerships for tech talks, panels, and networking opportunities.",
+      "Coordinate placement-related activities including Group Discussions, placement seminars and aptitude tests.",
+      "Serve as a communication link between students and the placement department.",
     ],
   },
   {
-    role: "Event Operations Lead",
-    organization: "OSCode Atria",
-    period: "2025 – 2026",
-    description: "Coordinating technical meetups, hands-on workshops, and developer bootcamps.",
+    role: "Technical Team Member",
+    organization: "Atria Code Club",
+    period: "2026 – Present",
+    kind: "Club",
+    description: "Member of the coding club's technical team.",
+    details: [],
+  },
+];
+
+export interface Achievement {
+  title: string;
+  result?: string;
+  organizer?: string;
+  project: string;
+  details: string[];
+}
+
+export const achievements: Achievement[] = [
+  {
+    title: "CODE RED ’25 Hackathon",
+    result: "Finalist",
+    organizer: "BMSIT&M",
+    project: "Carbon Grove",
     details: [
-      "Managed logistics, scheduling, and promotions for over 10+ major coding events, attracting 200+ students per event.",
-      "Hosted hands-on workshops on Web Development, IoT integration, and Artificial Intelligence basics.",
-      "Collaborated with cross-functional student bodies to drive inter-college hackathon engagement.",
-      "Handled event budgeting and resource allocation efficiently.",
+      "Qualified for and competed in the final round of a national-level 25-hour hackathon.",
+      "Developed “Carbon Grove”, a gamified mobile application, as the hackathon project.",
     ],
   },
   {
-    role: "Student Placement Coordinator",
-    organization: "Computer Science Department, Atria Institute of Technology",
-    period: "2024 – Present",
-    description: "Liaison between the college placement cell, recruiting companies, and students.",
+    title: "GDG on Campus Solution Challenge",
+    project: "Amrita Krishi",
     details: [
-      "Streamlined candidate databases and automated resume submission processing for 120+ computer science graduates.",
-      "Organized mock interviews, coding tests, and technical review sessions to enhance student placement readiness.",
-      "Coordinated campus recruitment drives with corporate recruiters, ensuring seamless communication and logistics.",
-      "Analyzed placement performance metrics and reported insights to department heads.",
+      "Contributed to “Amrita Krishi”, an AI-powered mobile app with computer vision for crop grading and a “Doctor AI” module.",
+    ],
+  },
+  {
+    title: "IIC Ideathon – Business Plan Competition",
+    project: "SmartAgriChain",
+    details: [
+      "Contributed to the “SmartAgriChain” business plan, proposing a unified platform to support agricultural activities.",
+    ],
+  },
+  {
+    title: "Eureka! Pitching Competition",
+    project: "Jeevandhara",
+    details: [
+      "Pitched “Jeevandhara”, a platform giving farmers real-time insights and market access, with AI-based crop quality analysis.",
     ],
   },
 ];
@@ -49,28 +112,23 @@ export interface Certification {
   title: string;
   issuer: string;
   year: string;
+  description?: string;
   credentialUrl?: string;
 }
 
 export const certifications: Certification[] = [
   {
-    title: "Google IT Automation with Python",
-    issuer: "Google",
-    year: "2025",
+    title: "Python Foundation Certification",
+    issuer: "Infosys Springboard",
+    year: "June 2025",
+    description: "Data structures, control flow and Object-Oriented Programming in Python.",
   },
+];
+
+export const seminars = [
   {
-    title: "Cisco Networking Essentials",
-    issuer: "Cisco",
-    year: "2025",
-  },
-  {
-    title: "IBM Python for Data Science",
-    issuer: "IBM",
-    year: "2024",
-  },
-  {
-    title: "AWS Certified Cloud Practitioner",
-    issuer: "Amazon Web Services",
-    year: "2026",
+    title: "Seminar on Space Science and Exploration",
+    organizer: "ISRO, with Soundarya Institute of Management and Science",
+    description: "One-day seminar organised in association with the Indian Space Research Organisation.",
   },
 ];

@@ -1,4 +1,14 @@
+/**
+ * LeetCode data for the dashboard – real data only.
+ *
+ * Source 1: LeetCode's public GraphQL endpoint (same one leetcode.com uses).
+ * Source 2: alfa-leetcode-api (community proxy) if GraphQL is unavailable.
+ * If both fail, the last successful result is reused; nothing is ever invented.
+ */
+
 export interface LeetCodeStats {
+  username: string;
+  profileUrl: string;
   totalSolved: number;
   totalQuestions: number;
   easySolved: number;
@@ -7,181 +17,256 @@ export interface LeetCodeStats {
   totalMedium: number;
   hardSolved: number;
   totalHard: number;
-  ranking: number;
-  contestRating: number;
+  ranking: number | null;
+  /** null when the user hasn't taken part in a rated contest. */
+  contestRating: number | null;
+  contestsAttended: number;
+  /** Consecutive days with a submission, ending today or yesterday. */
   streak: number;
+  /** Longest streak in the last year. */
+  maxStreak: number;
+  totalActiveDays: number;
+  badges: Array<{ name: string; icon?: string }>;
   submissions: Array<{
     title: string;
-    status: "Accepted" | "Wrong Answer" | "Time Limit Exceeded";
-    difficulty: "Easy" | "Medium" | "Hard";
+    url: string;
+    status: "Accepted";
+    difficulty: "Easy" | "Medium" | "Hard" | null;
     language: string;
-    time: string;
+    timestamp: number; // unix seconds
   }>;
+  /** unix-seconds (UTC midnight) → submission count */
   submissionCalendar: Record<string, number>;
+  fetchedAt: string;
   stale?: boolean;
 }
 
-const mockLeetCodeStats: LeetCodeStats = {
-  totalSolved: 243,
-  totalQuestions: 3100,
-  easySolved: 120,
-  totalEasy: 800,
-  mediumSolved: 105,
-  totalMedium: 1600,
-  hardSolved: 18,
-  totalHard: 700,
-  ranking: 154032,
-  contestRating: 1684,
-  streak: 14,
-  submissions: [
-    {
-      title: "Longest Palindromic Substring",
-      status: "Accepted",
-      difficulty: "Medium",
-      language: "Python",
-      time: "2 hours ago",
-    },
-    {
-      title: "Two Sum",
-      status: "Accepted",
-      difficulty: "Easy",
-      language: "C++",
-      time: "1 day ago",
-    },
-    {
-      title: "Merge k Sorted Lists",
-      status: "Accepted",
-      difficulty: "Hard",
-      language: "Python",
-      time: "3 days ago",
-    },
-    {
-      title: "Container With Most Water",
-      status: "Wrong Answer",
-      difficulty: "Medium",
-      language: "JavaScript",
-      time: "4 days ago",
-    },
-    {
-      title: "Binary Tree Inorder Traversal",
-      status: "Accepted",
-      difficulty: "Easy",
-      language: "Python",
-      time: "5 days ago",
-    },
-  ],
-  submissionCalendar: {}, // Generated dynamically in fetch
+const REVALIDATE_SECONDS = 600; // 10 minutes
+const lastGood: Record<string, LeetCodeStats> = {};
+
+const LANG_NAMES: Record<string, string> = {
+  python: "Python",
+  python3: "Python",
+  cpp: "C++",
+  c: "C",
+  java: "Java",
+  javascript: "JavaScript",
+  typescript: "TypeScript",
+  mysql: "SQL",
+  mssql: "SQL",
+  postgresql: "SQL",
+  oraclesql: "SQL",
+  csharp: "C#",
+  golang: "Go",
 };
 
-// Generate calendar mock timestamps for the last 6 months (approx 180 days)
-const generateMockCalendar = () => {
-  const cal: Record<string, number> = {};
-  const now = Math.floor(Date.now() / 1000);
-  const dayInSeconds = 24 * 60 * 60;
-  for (let i = 0; i < 180; i++) {
-    const timestamp = now - i * dayInSeconds;
-    if ((i * 11) % 100 < 45) {
-      cal[timestamp.toString()] = ((i * 3) % 4) + 1;
+const prettyLang = (l: string) => LANG_NAMES[l?.toLowerCase()] ?? l;
+
+function parseCalendar(raw: unknown): Record<string, number> {
+  if (!raw) return {};
+  if (typeof raw === "string") {
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return {};
     }
   }
-  return cal;
+  return raw as Record<string, number>;
+}
+
+/** Computes current and longest streaks from LeetCode's UTC-midnight timestamps. */
+export function computeStreaks(calendar: Record<string, number>) {
+  const days = new Set<number>();
+  for (const [ts, count] of Object.entries(calendar)) {
+    if (count > 0) days.add(Math.floor(Number(ts) / 86400));
+  }
+  const today = Math.floor(Date.now() / 86400000);
+  let current = 0;
+  let d = days.has(today) ? today : today - 1; // today not over yet
+  while (days.has(d)) {
+    current++;
+    d--;
+  }
+  let max = 0;
+  for (const day of days) {
+    if (days.has(day - 1)) continue;
+    let len = 1;
+    while (days.has(day + len)) len++;
+    max = Math.max(max, len);
+  }
+  return { current, max, activeDays: days.size };
+}
+
+/* ------------------------------------------------------------------ */
+/* Source 1: LeetCode GraphQL                                          */
+/* ------------------------------------------------------------------ */
+async function gql<T>(query: string, variables: Record<string, unknown>): Promise<T> {
+  const res = await fetch("https://leetcode.com/graphql", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Referer: "https://leetcode.com",
+      "User-Agent": "Mozilla/5.0 (portfolio-dashboard)",
+    },
+    body: JSON.stringify({ query, variables }),
+    next: { revalidate: REVALIDATE_SECONDS },
+  });
+  if (!res.ok) throw new Error(`leetcode graphql ${res.status}`);
+  const json = await res.json();
+  if (json.errors?.length && !json.data) throw new Error(`leetcode graphql: ${json.errors[0].message}`);
+  return json.data as T;
+}
+
+type GqlProfile = {
+  allQuestionsCount: Array<{ difficulty: string; count: number }>;
+  matchedUser: {
+    profile: { ranking: number | null };
+    submitStatsGlobal: { acSubmissionNum: Array<{ difficulty: string; count: number }> };
+    badges: Array<{ displayName: string; icon: string }>;
+    userCalendar: { streak: number; totalActiveDays: number; submissionCalendar: string };
+  } | null;
+  userContestRanking: { rating: number; attendedContestsCount: number } | null;
+  recentAcSubmissionList: Array<{ title: string; titleSlug: string; timestamp: string; lang: string }>;
 };
 
-mockLeetCodeStats.submissionCalendar = generateMockCalendar();
+async function fromGraphQL(username: string): Promise<LeetCodeStats> {
+  const data = await gql<GqlProfile>(
+    `query portfolio($username: String!) {
+      allQuestionsCount { difficulty count }
+      matchedUser(username: $username) {
+        profile { ranking }
+        submitStatsGlobal { acSubmissionNum { difficulty count } }
+        badges { displayName icon }
+        userCalendar { streak totalActiveDays submissionCalendar }
+      }
+      userContestRanking(username: $username) { rating attendedContestsCount }
+      recentAcSubmissionList(username: $username, limit: 8) { title titleSlug timestamp lang }
+    }`,
+    { username }
+  );
+  const u = data.matchedUser;
+  if (!u) throw new Error("leetcode: user not found");
+
+  const solved = (d: string) => u.submitStatsGlobal.acSubmissionNum.find((x) => x.difficulty === d)?.count ?? 0;
+  const total = (d: string) => data.allQuestionsCount.find((x) => x.difficulty === d)?.count ?? 0;
+
+  // Look up real difficulties for the recent problems in one aliased query.
+  const recent = data.recentAcSubmissionList ?? [];
+  const difficulties: Record<string, "Easy" | "Medium" | "Hard"> = {};
+  const slugs = [...new Set(recent.map((r) => r.titleSlug))].filter((s) => /^[a-z0-9-]+$/.test(s));
+  if (slugs.length) {
+    try {
+      const q = slugs.map((s, i) => `q${i}: question(titleSlug: "${s}") { difficulty }`).join("\n");
+      const res = await gql<Record<string, { difficulty: "Easy" | "Medium" | "Hard" } | null>>(`query { ${q} }`, {});
+      slugs.forEach((s, i) => {
+        const d = res[`q${i}`]?.difficulty;
+        if (d) difficulties[s] = d;
+      });
+    } catch {
+      /* difficulties are optional */
+    }
+  }
+
+  const calendar = parseCalendar(u.userCalendar?.submissionCalendar);
+  const streaks = computeStreaks(calendar);
+
+  return {
+    username,
+    profileUrl: `https://leetcode.com/u/${username}/`,
+    totalSolved: solved("All"),
+    totalQuestions: total("All"),
+    easySolved: solved("Easy"),
+    totalEasy: total("Easy"),
+    mediumSolved: solved("Medium"),
+    totalMedium: total("Medium"),
+    hardSolved: solved("Hard"),
+    totalHard: total("Hard"),
+    ranking: u.profile?.ranking ?? null,
+    contestRating:
+      data.userContestRanking && data.userContestRanking.attendedContestsCount > 0
+        ? Math.round(data.userContestRanking.rating)
+        : null,
+    contestsAttended: data.userContestRanking?.attendedContestsCount ?? 0,
+    streak: streaks.current,
+    maxStreak: Math.max(streaks.max, u.userCalendar?.streak ?? 0),
+    totalActiveDays: u.userCalendar?.totalActiveDays ?? streaks.activeDays,
+    badges: (u.badges ?? []).map((b) => ({
+      name: b.displayName,
+      icon: b.icon?.startsWith("/") ? `https://leetcode.com${b.icon}` : b.icon,
+    })),
+    submissions: recent.map((r) => ({
+      title: r.title,
+      url: `https://leetcode.com/problems/${r.titleSlug}/`,
+      status: "Accepted" as const,
+      difficulty: difficulties[r.titleSlug] ?? null,
+      language: prettyLang(r.lang),
+      timestamp: Number(r.timestamp),
+    })),
+    submissionCalendar: calendar,
+    fetchedAt: new Date().toISOString(),
+  };
+}
+
+/* ------------------------------------------------------------------ */
+/* Source 2: alfa-leetcode-api                                         */
+/* ------------------------------------------------------------------ */
+async function fromAlfa(username: string): Promise<LeetCodeStats> {
+  const res = await fetch(`https://alfa-leetcode-api.onrender.com/userProfile/${username}`, {
+    next: { revalidate: REVALIDATE_SECONDS },
+  });
+  if (!res.ok) throw new Error(`alfa api ${res.status}`);
+  const d = await res.json();
+  if (typeof d.totalSolved !== "number") throw new Error("alfa api: unexpected response");
+
+  const calendar = parseCalendar(d.submissionCalendar);
+  const streaks = computeStreaks(calendar);
+
+  return {
+    username,
+    profileUrl: `https://leetcode.com/u/${username}/`,
+    totalSolved: d.totalSolved,
+    totalQuestions: d.totalQuestions ?? 0,
+    easySolved: d.easySolved ?? 0,
+    totalEasy: d.totalEasy ?? 0,
+    mediumSolved: d.mediumSolved ?? 0,
+    totalMedium: d.totalMedium ?? 0,
+    hardSolved: d.hardSolved ?? 0,
+    totalHard: d.totalHard ?? 0,
+    ranking: d.ranking ?? null,
+    contestRating: null,
+    contestsAttended: 0,
+    streak: streaks.current,
+    maxStreak: streaks.max,
+    totalActiveDays: streaks.activeDays,
+    badges: [],
+    submissions: (d.recentSubmissions ?? [])
+      .filter((s: { statusDisplay: string }) => s.statusDisplay === "Accepted")
+      .slice(0, 8)
+      .map((s: { title: string; titleSlug: string; lang: string; timestamp: string }) => ({
+        title: s.title,
+        url: `https://leetcode.com/problems/${s.titleSlug}/`,
+        status: "Accepted" as const,
+        difficulty: null,
+        language: prettyLang(s.lang),
+        timestamp: Number(s.timestamp),
+      })),
+    submissionCalendar: calendar,
+    fetchedAt: new Date().toISOString(),
+  };
+}
 
 export async function fetchLeetCodeStats(username: string): Promise<LeetCodeStats> {
-  try {
-    const res = await fetch(`https://alfa-leetcode-api.onrender.com/userProfile/${username}`, {
-      next: { revalidate: 1800 }, // Cache for 30 minutes
-    });
-
-    if (!res.ok) {
-      throw new Error(`LeetCode API failed with status ${res.status}`);
+  const errors: string[] = [];
+  for (const source of [fromGraphQL, fromAlfa]) {
+    try {
+      const stats = await source(username);
+      lastGood[username] = stats;
+      return stats;
+    } catch (e) {
+      errors.push((e as Error).message);
     }
-
-    const data = await res.json();
-    
-    // Map recent submissions
-    const submissions = (data.recentSubmissions || []).slice(0, 5).map((sub: any) => {
-      const ts = parseInt(sub.timestamp);
-      const diffMs = Date.now() - ts * 1000;
-      const diffMins = Math.floor(diffMs / (1000 * 60));
-      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-      
-      let timeStr = "recently";
-      if (diffMins < 60) {
-        timeStr = `${diffMins} min${diffMins !== 1 ? "s" : ""} ago`;
-      } else if (diffHours < 24) {
-        timeStr = `${diffHours} hour${diffHours !== 1 ? "s" : ""} ago`;
-      } else {
-        timeStr = `${diffDays} day${diffDays !== 1 ? "s" : ""} ago`;
-      }
-
-      // Simple difficulty heuristic based on common problems, or fallback to Medium
-      let difficulty: "Easy" | "Medium" | "Hard" = "Medium";
-      const titleLower = sub.title.toLowerCase();
-      if (
-        titleLower.includes("two sum") ||
-        titleLower.includes("palindrome") ||
-        titleLower.includes("reverse") ||
-        titleLower.includes("merge") ||
-        titleLower.includes("common prefix") ||
-        titleLower.includes("sqrt") ||
-        titleLower.includes("unique character") ||
-        titleLower.includes("remove") ||
-        titleLower.includes("search insert")
-      ) {
-        difficulty = "Easy";
-      } else if (
-        titleLower.includes("median") ||
-        titleLower.includes("regular expression") ||
-        titleLower.includes("merge k sorted") ||
-        titleLower.includes("largest rectangle") ||
-        titleLower.includes("minimum window")
-      ) {
-        difficulty = "Hard";
-      }
-
-      const langKey = sub.lang.toLowerCase();
-      let language = sub.lang;
-      if (langKey.startsWith("python")) language = "Python";
-      else if (langKey === "cpp") language = "C++";
-      else if (langKey === "javascript") language = "JavaScript";
-      else if (langKey === "typescript") language = "TypeScript";
-      else if (langKey === "mysql" || langKey === "postgresql") language = "SQL";
-
-      return {
-        title: sub.title,
-        status: sub.statusDisplay === "Accepted" ? "Accepted" : "Wrong Answer",
-        difficulty,
-        language,
-        time: timeStr,
-      };
-    });
-
-    return {
-      totalSolved: data.totalSolved || 0,
-      totalQuestions: data.totalQuestions || 4000,
-      easySolved: data.easySolved || 0,
-      totalEasy: data.totalEasy || 1000,
-      mediumSolved: data.mediumSolved || 0,
-      totalMedium: data.totalMedium || 2000,
-      hardSolved: data.hardSolved || 0,
-      totalHard: data.totalHard || 1000,
-      ranking: data.ranking || mockLeetCodeStats.ranking,
-      contestRating: mockLeetCodeStats.contestRating, // mock field
-      streak: mockLeetCodeStats.streak, // mock field
-      submissions,
-      submissionCalendar: data.submissionCalendar && Object.keys(data.submissionCalendar).length > 0
-        ? data.submissionCalendar
-        : mockLeetCodeStats.submissionCalendar,
-    };
-  } catch (error) {
-    console.error("Error fetching live LeetCode stats:", error);
-    return {
-      ...mockLeetCodeStats,
-      stale: true,
-    };
   }
+  console.error("[leetcode] all sources failed:", errors.join(" | "));
+  if (lastGood[username]) return { ...lastGood[username], stale: true };
+  throw new Error("LeetCode stats unavailable");
 }

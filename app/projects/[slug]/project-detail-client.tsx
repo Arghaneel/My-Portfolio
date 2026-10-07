@@ -3,8 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import ProjectCover from "@/components/project-cover";
+import { GitHubIcon } from "@/components/social-icons";
 import { motion } from "framer-motion";
-import { ArrowLeft, Globe, ExternalLink, CheckCircle } from "lucide-react";
+import { ArrowLeft, ExternalLink, CheckCircle } from "lucide-react";
 import { Project } from "@/lib/data/projects";
 
 interface ProjectDetailClientProps {
@@ -12,7 +14,7 @@ interface ProjectDetailClientProps {
 }
 
 export default function ProjectDetailClient({ project }: ProjectDetailClientProps) {
-  const [activeImage, setActiveImage] = useState(project.images[0]);
+  const [activeImage, setActiveImage] = useState<string | undefined>(project.images[0]);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
@@ -36,12 +38,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
             transition={{ duration: 0.4 }}
             className="relative w-full aspect-video rounded-2xl overflow-hidden border border-border shadow-sm bg-secondary"
           >
-            <Image
-              src={activeImage}
-              alt={project.title}
-              fill
-              className="object-cover transition-all duration-300"
-            />
+            <ProjectCover project={project} image={activeImage} priority />
           </motion.div>
 
           {/* Thumbnail list */}
@@ -79,9 +76,14 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
             animate={{ opacity: 1, y: 0 }}
             className="space-y-3"
           >
-            <span className="px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold uppercase tracking-wider">
-              {project.category}
-            </span>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold uppercase tracking-wider">
+                {project.category}
+              </span>
+              {project.context && (
+                <span className="text-xs font-semibold text-muted-foreground">{project.context}</span>
+              )}
+            </div>
             <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
               {project.title}
             </h1>
@@ -164,8 +166,8 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-border bg-card hover:bg-secondary text-sm font-semibold transition-all"
               >
-                GitHub Repository
-                <Globe size={16} />
+                <GitHubIcon size={16} />
+                View Source on GitHub
               </a>
             )}
           </motion.div>

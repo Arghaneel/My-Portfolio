@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Mail, ArrowRight, Download, Terminal, Cpu, Database, Layout } from "lucide-react";
 import { siteConfig } from "@/lib/data/site-config";
 import { siteStats } from "@/lib/data/site-stats";
+import { GitHubIcon, LinkedInIcon, LeetCodeIcon } from "@/components/social-icons";
 
 const floatingBadges = [
   { icon: <Terminal className="text-yellow-500" size={18} />, label: "Python", x: "-20%", y: "-10%" },
@@ -34,7 +35,7 @@ export default function Home() {
               className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-ping" />
-              Available for Internships & Projects
+              {siteConfig.availability}
             </motion.div>
 
             <motion.h1
@@ -100,22 +101,31 @@ export default function Home() {
               className="flex items-center justify-center lg:justify-start gap-5 pt-4"
             >
               <a
+                href={siteConfig.socials.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary hover:scale-110 transition-all duration-200"
+                aria-label="GitHub"
+              >
+                <GitHubIcon size={24} />
+              </a>
+              <a
                 href={siteConfig.socials.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-primary hover:scale-110 transition-all duration-200"
                 aria-label="LinkedIn"
               >
-                <svg viewBox="0 0 24 24" className="fill-current" style={{ width: 24, height: 24 }} xmlns="http://www.w3.org/2000/svg"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                <LinkedInIcon size={24} />
               </a>
               <a
-                href={siteConfig.socials.instagram}
+                href={siteConfig.socials.leetcode}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-primary hover:scale-110 transition-all duration-200"
-                aria-label="Instagram"
+                aria-label="LeetCode"
               >
-                <svg viewBox="0 0 24 24" className="fill-none stroke-current" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 24, height: 24 }} xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                <LeetCodeIcon size={24} />
               </a>
               <a
                 href={siteConfig.socials.email}

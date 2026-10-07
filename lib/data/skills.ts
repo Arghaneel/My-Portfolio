@@ -1,61 +1,95 @@
+/**
+ * `icon` is a skillicons.dev id (https://github.com/tandpfun/skill-icons).
+ * Skills without one get a matching line icon on the Skills page.
+ */
 export interface Skill {
   name: string;
-  level: number; // percentage (optional visual aid)
+  icon?: string;
 }
 
 export interface SkillCategory {
   title: string;
+  description: string;
   skills: Skill[];
 }
+
+/** Shown large at the top of the Skills page. */
+export const coreStack: Skill[] = [
+  { name: "Python", icon: "py" },
+  { name: "Java", icon: "java" },
+  { name: "C++", icon: "cpp" },
+  { name: "MySQL", icon: "mysql" },
+  { name: "React", icon: "react" },
+  { name: "Next.js", icon: "nextjs" },
+];
 
 export const skillCategories: SkillCategory[] = [
   {
     title: "Languages",
+    description: "What I write code in day to day.",
     skills: [
-      { name: "Python", level: 90 },
-      { name: "C", level: 80 },
-      { name: "C++", level: 85 },
-      { name: "JavaScript", level: 88 },
-      { name: "SQL", level: 82 },
+      { name: "Python", icon: "py" },
+      { name: "Java", icon: "java" },
+      { name: "C", icon: "c" },
+      { name: "C++", icon: "cpp" },
+      { name: "JavaScript", icon: "js" },
+      { name: "TypeScript", icon: "ts" },
+      { name: "SQL" },
     ],
   },
   {
-    title: "Frontend",
+    title: "Web",
+    description: "Building interfaces and full-stack apps.",
     skills: [
-      { name: "HTML", level: 95 },
-      { name: "CSS", level: 90 },
-      { name: "React", level: 88 },
-      { name: "Tailwind CSS", level: 90 },
-      { name: "Bootstrap", level: 85 },
+      { name: "HTML", icon: "html" },
+      { name: "CSS", icon: "css" },
+      { name: "React", icon: "react" },
+      { name: "Next.js", icon: "nextjs" },
+      { name: "Tailwind CSS", icon: "tailwind" },
     ],
   },
   {
-    title: "Backend",
+    title: "Data",
+    description: "Storing and querying data reliably.",
     skills: [
-      { name: "Node.js", level: 85 },
-      { name: "Express.js", level: 83 },
-      { name: "Flask", level: 80 },
-      { name: "REST API", level: 90 },
+      { name: "MySQL", icon: "mysql" },
+      { name: "MongoDB", icon: "mongodb" },
+      { name: "JDBC" },
     ],
   },
   {
-    title: "Databases",
+    title: "AI & IoT",
+    description: "Where software meets models and hardware.",
     skills: [
-      { name: "MongoDB", level: 85 },
-      { name: "Firebase", level: 80 },
-      { name: "MySQL", level: 82 },
+      { name: "Applied AI" },
+      { name: "Agentic Systems" },
+      { name: "ESP32" },
+      { name: "Arduino", icon: "arduino" },
     ],
   },
   {
-    title: "Tools & Others",
+    title: "Tools",
+    description: "My everyday workflow.",
     skills: [
-      { name: "Git", level: 90 },
-      { name: "GitHub", level: 92 },
-      { name: "VS Code", level: 95 },
-      { name: "Postman", level: 88 },
-      { name: "Figma", level: 75 },
-      { name: "Arduino IDE", level: 85 },
-      { name: "Linux", level: 80 },
+      { name: "Git", icon: "git" },
+      { name: "GitHub", icon: "github" },
+      { name: "VS Code", icon: "vscode" },
+      { name: "PyCharm", icon: "pycharm" },
+      { name: "Jupyter" },
+      { name: "Excel" },
+      { name: "Canva" },
     ],
   },
+];
+
+export const concepts = ["Object-Oriented Programming", "Database Management", "Data Structures", "Problem Solving"];
+
+export const softSkills = [
+  "Leadership",
+  "Event Management",
+  "Public Speaking",
+  "Teamwork",
+  "Communication",
+  "Networking",
+  "Time Management",
 ];

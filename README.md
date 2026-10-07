@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Arghaneel Das — Portfolio
 
-## Getting Started
+Personal portfolio of **Arghaneel Das**, Computer Science student at Atria Institute of Technology (CGPA 9.28), Applied AI Intern at DeepAgentLabs and Vice-President of OSCode.
 
-First, run the development server:
+**Pages:** Home · About · Skills · Projects (with case studies) · Experience & Achievements · Developer Dashboard (live GitHub + LeetCode) · Contact
+
+## Highlights
+
+- **Live developer dashboard** – GitHub profile, repositories, a full-year contribution calendar and an activity graph, plus LeetCode stats. Data is fetched server-side, refreshed every minute and re-synced in the browser when you come back to the tab. If an API is down, the last good data is shown instead of placeholder numbers.
+- **Interactive background** – a WebGL fluid simulation that follows the cursor, mounted once for every page and disabled for users who prefer reduced motion.
+- **Working contact form** – validated with Zod and delivered through Resend; if email isn't configured it tells the visitor and offers a pre-filled email instead of silently dropping the message.
+- Light/dark theme, responsive layout, SEO metadata and generated social-share image.
+
+## Tech stack
+
+Next.js (App Router) · React 19 · TypeScript · Tailwind CSS v4 · Framer Motion · Zod · react-hook-form · next-themes
+
+## Running locally
 
 ```bash
+npm install
+cp .env.example .env.local   # optional – see below
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `GITHUB_USERNAME` | no | Defaults to `Arghaneel` |
+| `GITHUB_TOKEN` | no | Raises GitHub's limit from 60 to 5,000 requests/hour |
+| `LEETCODE_USERNAME` | no | Defaults to `arghaneel_das` |
+| `RESEND_API_KEY` | for the contact form | API key from [resend.com](https://resend.com) |
+| `CONTACT_TO_EMAIL` | no | Where contact messages go |
+| `CONTACT_FROM_EMAIL` | no | Sender address (must be a domain verified in Resend) |
+| `NEXT_PUBLIC_SITE_URL` | in production | Your deployed URL, used for link previews |
 
-## Learn More
+## Project structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+app/            routes, API routes (/api/github, /api/leetcode, /api/contact)
+components/     UI components (navbar, footer, project cards, contribution graph, fluid background)
+hooks/          client data hooks with auto-refresh
+lib/            GitHub & LeetCode data fetching, validation
+lib/data/       all site content – edit these files to update the portfolio
+public/         resume.pdf and images
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+To update content, edit the files in `lib/data/` (projects, experience, education, skills, site config).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Contact
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+[arghaneeldas29@gmail.com](mailto:arghaneeldas29@gmail.com) · [GitHub](https://github.com/Arghaneel) · [LinkedIn](https://www.linkedin.com/in/arghaneel-das/)

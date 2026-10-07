@@ -1,75 +1,85 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
+import ProjectFolders from "@/components/project-folders";
 import { projects } from "@/lib/data/projects";
-import ProjectCard from "@/components/project-card";
-
-const categories = ["All", "Web Development", "AI/ML", "IoT", "Full Stack"] as const;
-type Category = (typeof categories)[number];
+import { siteConfig } from "@/lib/data/site-config";
+import { GitHubIcon } from "@/components/social-icons";
 
 export default function Projects() {
-  const [selectedCategory, setSelectedCategory] = useState<Category>("All");
-
-  const filteredProjects = projects.filter((project) => {
-    if (selectedCategory === "All") return true;
-    return project.category === selectedCategory;
-  });
-
   return (
-    <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
-      {/* Title */}
-      <div className="text-center max-w-3xl mx-auto mb-12">
-        <motion.h1
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-4xl font-extrabold sm:text-5xl"
-        >
-          My Projects
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="mt-4 text-lg text-muted-foreground"
-        >
-          Browse my collection of web applications, AI models, and IoT experiments.
-        </motion.p>
-      </div>
+    <section className="relative min-h-screen overflow-hidden py-14 text-white">
+      {/* Solid backdrop sits below the fluid canvas so the cursor smoke shows here too */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-20 bg-[#020712]" />
 
-      {/* Filter Tabs Bar */}
-      <div className="flex flex-wrap justify-center gap-2 mb-12">
-        {categories.map((category) => (
-          <button
-            key={category}
-            onClick={() => setSelectedCategory(category)}
-            className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
-              selectedCategory === category
-                ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
-                : "bg-secondary text-muted-foreground hover:text-foreground hover:bg-accent"
-            }`}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
-
-      {/* Projects Grid */}
-      <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <AnimatePresence mode="popLayout">
-          {filteredProjects.map((project) => (
-            <ProjectCard key={project.slug} project={project} />
-          ))}
-        </AnimatePresence>
+      {/* Heading */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="px-4 text-center"
+      >
+        <p className="text-xs font-medium uppercase tracking-[0.35em] text-white/45">Featured Work</p>
+        <h1 className="mt-3 text-3xl font-black tracking-[-0.04em] text-white sm:text-5xl lg:text-6xl">
+          Projects that blend hardware, code and impact.
+        </h1>
       </motion.div>
 
-      {/* Empty State */}
-      {filteredProjects.length === 0 && (
-        <div className="text-center py-16">
-          <p className="text-muted-foreground">No projects found in this category.</p>
+      {/* Sliding folders */}
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.15 }}>
+        <ProjectFolders projects={projects} />
+      </motion.div>
+
+      <div className="max-w-5xl mx-auto px-4 sm:px-6">
+        {/* Hint bar */}
+        <div className="rounded-full border border-white/10 bg-white/5 px-4 py-3 text-xs text-white/70 backdrop-blur-sm sm:text-sm">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_14px_rgba(52,211,153,0.9)]" />
+              <span>{projects.length} selected projects</span>
+            </div>
+            <span className="hidden text-white/45 sm:inline">Hover a folder to pause · click to open the case study</span>
+          </div>
         </div>
-      )}
-    </div>
+
+        {/* Plain index – quick to scan and works without hover */}
+        <div className="mt-14">
+          <h2 className="text-xs font-medium uppercase tracking-[0.3em] text-white/45 mb-4">All projects</h2>
+          <ul className="divide-y divide-white/10 border-y border-white/10">
+            {projects.map((p) => (
+              <li key={p.slug}>
+                <Link
+                  href={`/projects/${p.slug}`}
+                  className="group flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-6 py-5 hover:bg-white/[0.03] transition-colors px-2 -mx-2 rounded-lg"
+                >
+                  <span className="sm:w-60 flex-shrink-0 text-lg font-bold text-white group-hover:text-sky-300 transition-colors">
+                    {p.title.split(" – ")[0]}
+                  </span>
+                  <span className="flex-1 text-sm text-white/60">{p.tagline}</span>
+                  <span className="flex items-center gap-3 text-xs text-white/45">
+                    <span className="uppercase tracking-wider">{p.category}</span>
+                    <ArrowUpRight size={16} className="text-white/40 group-hover:text-sky-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="mt-10 text-center">
+          <a
+            href={siteConfig.socials.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 text-sm font-semibold transition-colors"
+          >
+            <GitHubIcon size={16} />
+            More on GitHub
+          </a>
+        </div>
+      </div>
+    </section>
   );
 }

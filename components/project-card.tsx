@@ -1,92 +1,70 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { motion } from "framer-motion";
-import { Globe, ExternalLink } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { Project } from "@/lib/data/projects";
+import ProjectCover from "@/components/project-cover";
+import { GitHubIcon } from "@/components/social-icons";
 
 interface ProjectCardProps {
   project: Project;
+  index: number;
 }
 
-export default function ProjectCard({ project }: ProjectCardProps) {
+export default function ProjectCard({ project, index }: ProjectCardProps) {
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.3 }}
-      className="flex flex-col rounded-2xl bg-card border border-border shadow-sm hover:shadow-md hover:border-primary/30 overflow-hidden group transition-all duration-300"
+    <motion.article
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.45, delay: index * 0.07 }}
+      className="group relative flex flex-col rounded-2xl bg-card border border-border shadow-sm hover:shadow-lg hover:border-primary/30 hover:-translate-y-1 transition-all duration-300 overflow-hidden"
     >
-      {/* Cover Image */}
-      <div className="relative w-full aspect-video overflow-hidden bg-secondary">
-        <Image
-          src={project.images[0] || "/images/placeholder.png"}
-          alt={project.title}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover group-hover:scale-105 transition-transform duration-500"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-          <span className="px-2.5 py-1 rounded-md bg-primary/90 text-primary-foreground text-xs font-semibold uppercase tracking-wider">
-            {project.category}
-          </span>
-        </div>
+      <div className="relative aspect-[2/1] overflow-hidden">
+        <ProjectCover project={project} sizes="(max-width: 768px) 100vw, 50vw" />
       </div>
 
-      {/* Info Content */}
-      <div className="p-6 flex-grow flex flex-col justify-between space-y-4">
-        <div className="space-y-2.5">
-          <span className="text-xs font-semibold text-primary uppercase tracking-wider md:hidden">
+      <div className="flex flex-col flex-1 p-5 space-y-3">
+        <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold">
+          <span className="px-2 py-0.5 rounded-md bg-primary/10 text-primary uppercase tracking-wider">
             {project.category}
           </span>
-          <Link href={`/projects/${project.slug}`} className="block">
-            <h3 className="text-xl font-bold leading-snug text-foreground hover:text-primary transition-colors">
-              {project.title}
-            </h3>
-          </Link>
-          <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
-            {project.tagline}
-          </p>
+          {project.context && <span className="text-muted-foreground">{project.context}</span>}
         </div>
 
-        {/* Tech Stack chips */}
+        <h3 className="text-xl font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
+          {/* Stretched link makes the whole card clickable */}
+          <Link href={`/projects/${project.slug}`} className="after:absolute after:inset-0">
+            {project.title}
+          </Link>
+        </h3>
+        <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">{project.tagline}</p>
+
         <div className="flex flex-wrap gap-1.5 pt-1">
-          {project.techStack.map((tech, idx) => (
-            <span
-              key={idx}
-              className="px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground text-xs font-medium"
-            >
-              {tech}
+          {project.techStack.map((t) => (
+            <span key={t} className="px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground text-[11px] font-semibold">
+              {t}
             </span>
           ))}
         </div>
 
-        {/* Buttons strip */}
-        <div className="flex items-center gap-3 pt-3 mt-auto border-t border-border/40">
-          <Link
-            href={`/projects/${project.slug}`}
-            className="flex-grow inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/95 shadow-sm transition-all"
-          >
-            Details
-            <ExternalLink size={14} />
-          </Link>
-          
+        <div className="mt-auto pt-3 flex items-center justify-between border-t border-border/50">
+          <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary">
+            Case study <ArrowUpRight size={15} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+          </span>
           {project.githubUrl && (
             <a
               href={project.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 rounded-xl border border-border/80 hover:bg-secondary text-muted-foreground hover:text-foreground transition-all"
-              aria-label="GitHub Repository"
+              className="relative z-10 inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground"
+              aria-label={`${project.title} source code on GitHub`}
             >
-              <Globe size={18} />
+              <GitHubIcon size={14} /> Code
             </a>
           )}
         </div>
       </div>
-    </motion.div>
+    </motion.article>
   );
 }

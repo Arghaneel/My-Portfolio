@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Make `dark:` utilities follow the theme toggle (.dark on <html>), not just the OS setting. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #f8fafc; /* Slate 50 */
   --foreground: #0f172a; /* Slate 900 */
@@ -100,4 +103,43 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--muted-foreground);
+}
+
+/* ── Projects: sliding folders ─────────────────────────────────── */
+@keyframes folders-marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+.folders-track {
+  animation: folders-marquee 70s linear infinite;
+}
+
+.folders-stage:hover .folders-track,
+.folders-stage:focus-within .folders-track {
+  animation-play-state: paused;
+}
+
+.folder-card {
+  transform: skewY(28deg);
+  opacity: 0.85;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease, box-shadow 0.4s ease;
+  will-change: transform;
+}
+
+.folders-stage:hover .folder-card {
+  opacity: 0.5;
+}
+
+.folders-stage .folder-card:hover,
+.folders-stage .folder-card:focus-visible {
+  transform: perspective(1400px) rotateY(-10deg) scale(1.14);
+  opacity: 1;
+  z-index: 50 !important;
+  box-shadow: 0 50px 100px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(125, 211, 252, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folders-track { animation: none; }
+  .folders-viewport { overflow-x: auto; }
 }
