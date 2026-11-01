@@ -3,49 +3,74 @@
 /* Make `dark:` utilities follow the theme toggle (.dark on <html>), not just the OS setting. */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/*
+ * Palette: near-black surfaces, quiet zinc greys and one green → teal accent,
+ * used for highlighted words, active states and the live "available" dot.
+ */
 :root {
-  --background: #f8fafc; /* Slate 50 */
-  --foreground: #0f172a; /* Slate 900 */
+  --background: #fafafa;
+  --foreground: #09090b;
   --card: #ffffff;
-  --card-foreground: #0f172a;
+  --card-foreground: #09090b;
   --popover: #ffffff;
-  --popover-foreground: #0f172a;
-  --primary: #0284c7; /* Sky 600 */
+  --popover-foreground: #09090b;
+  --primary: #16a34a; /* green-600 */
   --primary-foreground: #ffffff;
-  --secondary: #f1f5f9; /* Slate 100 */
-  --secondary-foreground: #0f172a;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b; /* Slate 500 */
-  --accent: #e2e8f0; /* Slate 200 */
-  --accent-foreground: #0f172a;
-  --destructive: #ef4444;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --muted: #f4f4f5;
+  --muted-foreground: #52525b; /* zinc-600 */
+  --accent: #e4e4e7;
+  --accent-foreground: #18181b;
+  --destructive: #dc2626;
   --destructive-foreground: #ffffff;
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --ring: #0284c7;
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: #16a34a;
   --radius: 1rem;
+
+  --grad-from: #16a34a;
+  --grad-via: #059669;
+  --grad-to: #0d9488;
+  --glow: rgba(22, 163, 74, 0.22);
+
+  /* LeetCode difficulty (validated for both surfaces; always shown with labels) */
+  --easy: #059669;
+  --medium: #d97706;
+  --hard: #e11d48;
 }
 
 .dark {
-  --background: #030712; /* Deep dark gray */
-  --foreground: #f9fafb; /* Gray 50 */
-  --card: #0b0f19; /* Navy tinted card background */
-  --card-foreground: #f9fafb;
-  --popover: #0b0f19;
-  --popover-foreground: #f9fafb;
-  --primary: #38bdf8; /* Sky 400 */
-  --primary-foreground: #030712;
-  --secondary: #111827; /* Gray 900 */
-  --secondary-foreground: #f9fafb;
-  --muted: #1f2937; /* Gray 800 */
-  --muted-foreground: #9ca3af; /* Gray 400 */
-  --accent: #1f2937;
-  --accent-foreground: #f9fafb;
+  --background: #0a0a0a;
+  --foreground: #fafafa;
+  --card: #111111;
+  --card-foreground: #fafafa;
+  --popover: #111111;
+  --popover-foreground: #fafafa;
+  --primary: #4ade80; /* green-400 */
+  --primary-foreground: #052e16;
+  --secondary: #181818;
+  --secondary-foreground: #fafafa;
+  --muted: #1c1c1c;
+  --muted-foreground: #a1a1aa; /* zinc-400 */
+  --accent: #232323;
+  --accent-foreground: #fafafa;
   --destructive: #f87171;
   --destructive-foreground: #ffffff;
-  --border: #1f2937;
-  --input: #1f2937;
-  --ring: #38bdf8;
+  --border: #222222;
+  --input: #262626;
+  --ring: #4ade80;
+
+  --grad-from: #4ade80;
+  --grad-via: #34d399;
+  --grad-to: #2dd4bf;
+  --glow: rgba(74, 222, 128, 0.18);
+}
+
+/* Use the Geist fonts loaded in app/layout.tsx for `font-sans` / `font-mono`. */
+@theme inline {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
 }
 
 @theme {
@@ -68,6 +93,9 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-easy: var(--easy);
+  --color-medium: var(--medium);
+  --color-hard: var(--hard);
   --radius-xl: var(--radius);
 }
 
@@ -84,6 +112,10 @@ body {
 
 html {
   scroll-behavior: smooth;
+}
+
+::selection {
+  background: var(--glow);
 }
 
 /* Custom Scrollbar */
@@ -105,7 +137,47 @@ html {
   background: var(--muted-foreground);
 }
 
-/* ── Projects: sliding folders ─────────────────────────────────── */
+/* ── Accent helpers ────────────────────────────────────────────── */
+.text-gradient {
+  background-image: linear-gradient(90deg, var(--grad-from), var(--grad-via) 55%, var(--grad-to));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.glow-frame {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary) 45%, transparent), 0 0 48px var(--glow);
+}
+
+/* ── Technology marquee ────────────────────────────────────────── */
+@keyframes marquee-left {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes marquee-right {
+  from { transform: translate3d(-50%, 0, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}
+
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+
+.marquee-track {
+  animation: marquee-left 45s linear infinite;
+}
+
+.marquee-track--reverse {
+  animation-name: marquee-right;
+}
+
+.marquee-mask:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* ── Projects: sliding folders (components/project-folders.tsx) ── */
 @keyframes folders-marquee {
   from { transform: translate3d(0, 0, 0); }
   to { transform: translate3d(-50%, 0, 0); }
@@ -140,6 +212,8 @@ html {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .folders-track { animation: none; }
+  .folders-track,
+  .marquee-track { animation: none; }
   .folders-viewport { overflow-x: auto; }
+  .marquee-mask { overflow-x: auto; }
 }

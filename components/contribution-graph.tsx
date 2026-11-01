@@ -215,7 +215,7 @@ function StatTile({ icon, label, value }: { icon: React.ReactNode; label: string
 /* ------------------------------------------------------------------ */
 /* Heatmap                                                             */
 /* ------------------------------------------------------------------ */
-function Heatmap({ days, unit }: { days: ContributionDay[]; unit: string }) {
+export function Heatmap({ days, unit }: { days: ContributionDay[]; unit: string }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [tip, setTip] = useState<{ x: number; y: number; day: ContributionDay } | null>(null);
 

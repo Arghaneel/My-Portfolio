@@ -2,6 +2,8 @@
 
 import { useMemo } from "react";
 import Link from "next/link";
+import DashboardTabs from "@/components/dashboard-tabs";
+import SectionHeading from "@/components/section-heading";
 import { useLeetcodeStats } from "@/hooks/use-leetcode-stats";
 import { Flame, Award, Globe, CheckCircle, ExternalLink, CalendarDays } from "lucide-react";
 import ContributionGraph, { ContributionDay } from "@/components/contribution-graph";
@@ -37,26 +39,13 @@ const pct = (a: number, b: number) => (b > 0 ? Math.min(100, (a / b) * 100) : 0)
 export default function LeetCodeDashboard() {
   const { data: leetcode, loading, error } = useLeetcodeStats();
 
-  const dashboardNav = (
-    <div className="flex gap-2 border-b border-border/40 pb-4 mb-8">
-      <Link href="/dashboard" className="px-4 py-2 text-sm font-semibold text-muted-foreground hover:text-foreground">
-        Overview
-      </Link>
-      <Link href="/dashboard/github" className="px-4 py-2 text-sm font-semibold text-muted-foreground hover:text-foreground">
-        GitHub
-      </Link>
-      <Link href="/dashboard/leetcode" className="px-4 py-2 text-sm font-bold text-primary border-b-2 border-primary">
-        LeetCode
-      </Link>
-    </div>
-  );
 
   const days = useMemo(() => (leetcode ? toDays(leetcode.submissionCalendar) : []), [leetcode]);
   const yearTotal = useMemo(() => days.reduce((s, d) => s + d.count, 0), [days]);
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-24 sm:pt-16">
         <div className="h-10 w-48 bg-secondary animate-pulse rounded-lg mb-6" />
         <div className="h-64 bg-secondary animate-pulse rounded-2xl" />
       </div>
@@ -65,7 +54,7 @@ export default function LeetCodeDashboard() {
 
   if (error || !leetcode) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8 text-center space-y-3">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-24 sm:pt-16 text-center space-y-3">
         <p className="text-muted-foreground font-semibold">LeetCode stats are temporarily unavailable.</p>
         <a
           href="https://leetcode.com/u/arghaneel_das/"
@@ -87,27 +76,35 @@ export default function LeetCodeDashboard() {
     { label: "Medium", solved: leetcode.mediumSolved, total: leetcode.totalMedium, color: "amber" },
     { label: "Hard", solved: leetcode.hardSolved, total: leetcode.totalHard, color: "red" },
   ] as const;
-  const barColor = { emerald: "bg-emerald-500", amber: "bg-amber-500", red: "bg-red-500" };
-  const textColor = { emerald: "text-emerald-500", amber: "text-amber-500", red: "text-red-500" };
+  const barColor = { emerald: "bg-easy", amber: "bg-medium", red: "bg-hard" };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-24 sm:pt-16">
       <div>
-        <h1 className="text-4xl font-extrabold text-foreground">LeetCode Statistics</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          Live data from{" "}
-          <a href={leetcode.profileUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-            leetcode.com/u/{leetcode.username}
-          </a>
-        </p>
+        <SectionHeading
+          as="h1"
+          eyebrow="Dashboard"
+          title="LeetCode"
+          highlight="Statistics."
+          description={
+            <>
+              Live data from{" "}
+              <a href={leetcode.profileUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                leetcode.com/u/{leetcode.username}
+              </a>
+            </>
+          }
+        />
       </div>
 
-      <div className="mt-8">{dashboardNav}</div>
+      <div className="mt-8 mb-8">
+        <DashboardTabs active="leetcode" />
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left */}
         <div className="lg:col-span-4 space-y-6">
-          <div className="p-6 rounded-2xl bg-card border border-border shadow-sm space-y-6">
+          <div className="p-6 rounded-2xl bg-card border border-border space-y-6">
             <div className="flex items-end justify-between">
               <h2 className="text-lg font-bold text-foreground">Problems Solved</h2>
               <span className="text-3xl font-extrabold text-foreground">{leetcode.totalSolved}</span>
@@ -116,7 +113,10 @@ export default function LeetCodeDashboard() {
               {rows.map((r) => (
                 <div key={r.label} className="space-y-1.5">
                   <div className="flex justify-between text-xs font-semibold">
-                    <span className={textColor[r.color]}>{r.label}</span>
+                    <span className="flex items-center gap-2 text-foreground">
+                      <span className={`h-2 w-2 rounded-full ${barColor[r.color]}`} />
+                      {r.label}
+                    </span>
                     <span>
                       {r.solved} / {r.total}
                     </span>
@@ -146,7 +146,7 @@ export default function LeetCodeDashboard() {
             </div>
           </div>
 
-          <div className="p-6 rounded-2xl bg-card border border-border shadow-sm space-y-4">
+          <div className="p-6 rounded-2xl bg-card border border-border space-y-4">
             <div className="flex items-center gap-4 p-4 rounded-xl bg-orange-500/10 border border-orange-500/20 text-orange-600 dark:text-orange-400">
               <Flame size={28} className="text-orange-500" />
               <div>
@@ -194,7 +194,7 @@ export default function LeetCodeDashboard() {
             fetchedAt={leetcode.fetchedAt}
           />
 
-          <div className="p-6 rounded-2xl bg-card border border-border shadow-sm space-y-4">
+          <div className="p-6 rounded-2xl bg-card border border-border space-y-4">
             <h3 className="text-lg font-bold text-foreground">Recently Solved</h3>
             {leetcode.submissions.length === 0 ? (
               <p className="text-sm text-muted-foreground flex items-center gap-2">

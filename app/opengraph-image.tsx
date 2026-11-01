@@ -17,8 +17,8 @@ export default function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "72px 80px",
-          background: "linear-gradient(135deg, #030712 0%, #0b1730 55%, #0c4a6e 100%)",
-          color: "#f9fafb",
+          background: "radial-gradient(circle at 85% 0%, rgba(74,222,128,0.22), transparent 55%), #0a0a0a",
+          color: "#fafafa",
           fontFamily: "sans-serif",
         }}
       >
@@ -28,7 +28,9 @@ export default function OpengraphImage() {
               width: 72,
               height: 72,
               borderRadius: 18,
-              background: "#0284c7",
+              background: "#111111",
+              border: "1px solid rgba(74,222,128,0.5)",
+              color: "#4ade80",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -38,12 +40,14 @@ export default function OpengraphImage() {
           >
             AD
           </div>
-          <div style={{ display: "flex", fontSize: 26, color: "#7dd3fc" }}>Portfolio</div>
+          <div style={{ display: "flex", fontSize: 26, color: "#a1a1aa" }}>Portfolio</div>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-          <div style={{ display: "flex", fontSize: 84, fontWeight: 800, letterSpacing: -2 }}>Arghaneel Das</div>
-          <div style={{ display: "flex", fontSize: 36, color: "#cbd5e1" }}>
+          <div style={{ display: "flex", fontSize: 84, fontWeight: 800, letterSpacing: -2 }}>
+            Arghaneel Das<span style={{ color: "#4ade80" }}>.</span>
+          </div>
+          <div style={{ display: "flex", fontSize: 36, color: "#a1a1aa" }}>
             Computer Science Student · Atria Institute of Technology
           </div>
         </div>
@@ -57,9 +61,9 @@ export default function OpengraphImage() {
                 fontSize: 26,
                 padding: "10px 22px",
                 borderRadius: 999,
-                background: "rgba(56,189,248,0.14)",
-                border: "1px solid rgba(56,189,248,0.4)",
-                color: "#e0f2fe",
+                background: "#111111",
+                border: "1px solid #262626",
+                color: "#e4e4e7",
               }}
             >
               {c}

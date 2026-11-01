@@ -14,7 +14,7 @@ export default function ThemeToggle() {
   }, []);
 
   if (!mounted) {
-    return <div className="w-9 h-9 rounded-lg bg-secondary/50 animate-pulse" />;
+    return <div className="w-9 h-9 rounded-full bg-secondary/50 animate-pulse" />;
   }
 
   const currentTheme = theme === "system" ? resolvedTheme : theme;
@@ -22,13 +22,13 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(currentTheme === "dark" ? "light" : "dark")}
-      className="p-2 rounded-lg bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground border border-border/50 shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/50"
+      className="p-2 rounded-full border border-border bg-card text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
       aria-label="Toggle theme"
     >
       {currentTheme === "dark" ? (
-        <Sun className="h-[18px] w-[18px] text-amber-400 animate-spin-slow" />
+        <Sun className="h-[18px] w-[18px]" />
       ) : (
-        <Moon className="h-[18px] w-[18px] text-indigo-700" />
+        <Moon className="h-[18px] w-[18px]" />
       )}
     </button>
   );

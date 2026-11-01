@@ -2,6 +2,7 @@ import { projects } from "@/lib/data/projects";
 import { notFound } from "next/navigation";
 import ProjectDetailClient from "./project-detail-client";
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -11,11 +12,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const project = projects.find((p) => p.slug === slug);
   if (!project) return { title: "Project Not Found" };
-  return {
-    title: project.title,
-    description: project.tagline,
-    openGraph: { title: `${project.title} — Arghaneel Das`, description: project.tagline },
-  };
+  return pageMetadata({ title: project.title, description: project.tagline, path: `/projects/${project.slug}` });
 }
 
 export async function generateStaticParams() {

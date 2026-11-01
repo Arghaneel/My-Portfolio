@@ -3,210 +3,335 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Mail, ArrowRight, Download, Terminal, Cpu, Database, Layout } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Download, Mail, MapPin, BrainCircuit, Cpu, Database, Users } from "lucide-react";
 import { siteConfig } from "@/lib/data/site-config";
-import { siteStats } from "@/lib/data/site-stats";
+import { projects } from "@/lib/data/projects";
 import { GitHubIcon, LinkedInIcon, LeetCodeIcon } from "@/components/social-icons";
+import SectionHeading, { Eyebrow } from "@/components/section-heading";
+import TechMarquee from "@/components/tech-marquee";
+import ProjectCard from "@/components/project-card";
+import { GitHubCard, LeetCodeCard } from "@/components/dev-stats";
+import { useGithubStats } from "@/hooks/use-github-stats";
+import { useLeetcodeStats } from "@/hooks/use-leetcode-stats";
 
-const floatingBadges = [
-  { icon: <Terminal className="text-yellow-500" size={18} />, label: "Python", x: "-20%", y: "-10%" },
-  { icon: <Layout className="text-sky-400" size={18} />, label: "React", x: "85%", y: "20%" },
-  { icon: <Cpu className="text-emerald-500" size={18} />, label: "IoT", x: "-10%", y: "75%" },
-  { icon: <Database className="text-purple-500" size={18} />, label: "SQL", x: "75%", y: "-15%" },
+const firstName = siteConfig.name.split(" ")[0];
+
+const fadeUp = {
+  initial: { opacity: 0, y: 18 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-60px" },
+  transition: { duration: 0.5 },
+} as const;
+
+const tones = {
+  blue: "bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/20",
+  purple: "bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-500/20",
+  orange: "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20",
+  green: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+} as const;
+
+const services: {
+  icon: React.ReactNode;
+  tone: keyof typeof tones;
+  title: string;
+  text: string;
+  wide?: boolean;
+  chips?: string[];
+}[] = [
+  {
+    icon: <BrainCircuit size={20} />,
+    tone: "blue",
+    title: "Applied AI & Agentic Systems",
+    text: "Prototyping, evaluating and documenting agentic AI workflows as an Applied AI Intern at DeepAgentLabs, turning models into tools people actually use.",
+    wide: true,
+    chips: ["Research", "Prototype", "Evaluate", "Document"],
+  },
+  {
+    icon: <Cpu size={20} />,
+    tone: "purple",
+    title: "IoT & Embedded",
+    text: "ESP32 and Arduino builds that sense the physical world, like SixthSense, a wearable aid that detects head-level obstacles in real time.",
+  },
+  {
+    icon: <Database size={20} />,
+    tone: "orange",
+    title: "Software & Databases",
+    text: "Java, Python and SQL applications on well-designed databases, like ElectriFlow's slab-based billing engine with role-based access.",
+  },
+  {
+    icon: <Users size={20} />,
+    tone: "green",
+    title: "Leadership & Community",
+    text: "Vice-President of OSCode. As Event Coordinator I led a 10-member team and ran tech talks and seminars for 60+ students.",
+    wide: true,
+    chips: ["OSCode VP", "10-member team", "60+ attendees"],
+  },
 ];
 
 export default function Home() {
-  return (
-    <div className="relative min-h-[calc(100vh-4rem)] flex flex-col justify-center overflow-hidden">
-      {/* Background Gradients */}
-      <div className="absolute inset-0 -z-10 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/10 rounded-full blur-3xl dark:bg-primary/5" />
-        <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-100 h-100 bg-sky-500/10 rounded-full blur-3xl dark:bg-sky-500/5" />
-      </div>
+  const github = useGithubStats();
+  const leetcode = useLeetcodeStats();
 
-      <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8 w-full grow flex flex-col justify-center">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          {/* Text Content Column */}
-          <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-ping" />
-              {siteConfig.availability}
+  return (
+    <div className="relative">
+      {/* ── Hero ─────────────────────────────────────────────── */}
+      <section id="home" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-12 sm:pt-16 lg:pt-20 lg:pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-14 lg:gap-10 items-center">
+          <div className="lg:col-span-7">
+            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+              <Eyebrow live>{siteConfig.availability}</Eyebrow>
             </motion.div>
 
             <motion.h1
-              initial={{ opacity: 0, y: 15 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight"
+              transition={{ duration: 0.55, delay: 0.08 }}
+              className="mt-6 text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.02] text-foreground"
             >
-              Hi, I&apos;m{" "}
-              <span className="bg-clip-text text-transparent bg-linear-to-r from-primary via-blue-500 to-sky-400">
-                {siteConfig.name}
-              </span>
+              Hi, I&apos;m
+              <br />
+              <span className="text-gradient">{firstName}.</span>
             </motion.h1>
 
             <motion.p
-              initial={{ opacity: 0, y: 15 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-lg sm:text-xl font-medium text-muted-foreground"
+              transition={{ duration: 0.55, delay: 0.16 }}
+              className="mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-muted-foreground"
             >
-              {siteConfig.role}
+              A <strong className="font-semibold text-foreground">Computer Science student</strong> and{" "}
+              <strong className="font-semibold text-foreground">Applied AI Intern</strong> based in {siteConfig.location}. I
+              build practical software (agentic AI tools, IoT devices and data-driven apps) that solves real problems.
             </motion.p>
 
-            <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto lg:mx-0"
-            >
-              {siteConfig.bio}
-            </motion.p>
-
-            {/* CTA Buttons */}
             <motion.div
-              initial={{ opacity: 0, y: 15 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2"
+              transition={{ duration: 0.55, delay: 0.24 }}
+              className="mt-8 flex flex-wrap items-center gap-3"
             >
               <Link
-                href="/projects"
-                className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold shadow-lg shadow-primary/20 hover:bg-primary/95 hover:shadow-primary/35 hover:-translate-y-0.5 transition-all duration-200"
+                href="/contact"
+                className="group inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background transition-opacity hover:opacity-90"
               >
-                View Projects
-                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                Contact Me
+                <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
               </Link>
               <a
                 href={siteConfig.resumeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-card border border-border/80 hover:bg-secondary/80 font-semibold hover:-translate-y-0.5 transition-all duration-200"
+                className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
               >
-                Download Resume
-                <Download size={18} />
+                Download CV
+                <Download size={16} />
               </a>
             </motion.div>
 
-            {/* Social Links Row */}
             <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-              className="flex items-center justify-center lg:justify-start gap-5 pt-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.35 }}
+              className="mt-10 flex items-center gap-4 text-muted-foreground"
             >
-              <a
-                href={siteConfig.socials.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary hover:scale-110 transition-all duration-200"
-                aria-label="GitHub"
-              >
-                <GitHubIcon size={24} />
-              </a>
-              <a
-                href={siteConfig.socials.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary hover:scale-110 transition-all duration-200"
-                aria-label="LinkedIn"
-              >
-                <LinkedInIcon size={24} />
-              </a>
-              <a
-                href={siteConfig.socials.leetcode}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary hover:scale-110 transition-all duration-200"
-                aria-label="LeetCode"
-              >
-                <LeetCodeIcon size={24} />
-              </a>
-              <a
-                href={siteConfig.socials.email}
-                className="text-muted-foreground hover:text-primary hover:scale-110 transition-all duration-200"
-                aria-label="Email"
-              >
-                <Mail size={24} />
-              </a>
-            </motion.div>
-          </div>
-
-          {/* Profile Photo & Floating Stack Column */}
-          <div className="lg:col-span-5 flex justify-center items-center relative py-8">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative w-64 h-64 sm:w-80 sm:h-80"
-            >
-              {/* Outer glowing border */}
-              <div className="absolute inset-0 rounded-full bg-linear-to-tr from-primary to-sky-400 blur-md opacity-40 animate-pulse" />
-              
-              {/* Image Frame */}
-              <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-background shadow-2xl z-10">
-                <Image
-                  src="/images/Profile.png"
-                  alt={siteConfig.name}
-                  fill
-                  sizes="(max-width: 768px) 256px, 320px"
-                  priority
-                  className="object-cover"
-                />
-              </div>
-
-              {/* Floating Badges */}
-              {floatingBadges.map((badge, idx) => (
-                <motion.div
-                  key={idx}
-                  style={{ top: badge.y, left: badge.x }}
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    delay: idx * 0.7,
-                    ease: "easeInOut",
-                  }}
-                  className="absolute z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-card/90 dark:bg-secondary/90 border border-border shadow-md backdrop-blur-sm pointer-events-none hover:scale-105 transition-transform"
+              <span className="text-xs uppercase tracking-[0.2em]">Find me on</span>
+              <span className="h-px w-8 bg-border" />
+              {[
+                { href: siteConfig.socials.github, label: "GitHub", icon: <GitHubIcon size={18} /> },
+                { href: siteConfig.socials.linkedin, label: "LinkedIn", icon: <LinkedInIcon size={18} /> },
+                { href: siteConfig.socials.leetcode, label: "LeetCode", icon: <LeetCodeIcon size={18} /> },
+              ].map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={s.label}
+                  className="transition-colors hover:text-primary"
                 >
-                  {badge.icon}
-                  <span className="text-xs font-semibold text-foreground">{badge.label}</span>
-                </motion.div>
+                  {s.icon}
+                </a>
               ))}
             </motion.div>
           </div>
-        </div>
 
-        {/* Stat strip (4 stat cards) */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 sm:mt-24"
-        >
-          {siteStats.map((stat, idx) => (
-            <div
-              key={idx}
-              className="p-5 sm:p-6 rounded-2xl bg-card border border-border shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-300 group hover:-translate-y-1"
-            >
-              <div className="text-3xl sm:text-4xl font-extrabold text-primary mb-1 group-hover:scale-105 transition-transform origin-left">
-                {stat.value}
-              </div>
-              <div className="text-sm font-semibold text-foreground mb-1">
-                {stat.label}
-              </div>
-              <div className="text-xs text-muted-foreground leading-normal">
-                {stat.description}
+          {/* Photo card */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="lg:col-span-5"
+          >
+            <div className="relative mx-auto w-full max-w-[340px]">
+              {/* offset glowing frame behind the card */}
+              <div aria-hidden="true" className="absolute -inset-3 -rotate-3 rounded-[2rem] glow-frame opacity-70" />
+              <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-border bg-card glow-frame">
+                <Image
+                  src="/images/Profile.png"
+                  alt={`Portrait of ${siteConfig.name}`}
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 340px, 30vw"
+                  className="object-cover object-top"
+                />
+                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
+                <Link
+                  href="/about"
+                  aria-label="More about me"
+                  className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-sm transition-colors hover:bg-black/60"
+                >
+                  <ArrowUpRight size={18} />
+                </Link>
+                <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3 text-white">
+                  <div>
+                    <p className="text-sm font-semibold">{siteConfig.name}</p>
+                    <p className="text-xs text-white/70">Applied AI Intern · DeepAgentLabs</p>
+                  </div>
+                  <span className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/10 px-2.5 py-1 text-[11px] backdrop-blur-sm">
+                    <MapPin size={11} /> {siteConfig.location.split(",")[0]}
+                  </span>
+                </div>
               </div>
             </div>
-          ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── Technological Foundation ─────────────────────────── */}
+      <section id="stack" className="py-20 scroll-mt-20">
+        <motion.div {...fadeUp} className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            align="center"
+            title="Technological Foundation"
+            description="The languages, frameworks and tools I use to take ideas from a sketch to something that works."
+          />
         </motion.div>
-      </div>
+        <motion.div {...fadeUp} className="mx-auto mt-10 max-w-6xl">
+          <TechMarquee />
+        </motion.div>
+      </section>
+
+      {/* ── Beyond Just Coding ───────────────────────────────── */}
+      <section id="services" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 scroll-mt-20">
+        <motion.div {...fadeUp}>
+          <SectionHeading
+            align="center"
+            title="Beyond Just Coding"
+            description="I care about the whole journey of a project, from understanding who a problem affects to something tested, documented and in someone's hands."
+          />
+        </motion.div>
+
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4">
+          {services.map((s, i) => (
+            <motion.article
+              key={s.title}
+              {...fadeUp}
+              transition={{ duration: 0.5, delay: (i % 2) * 0.08 }}
+              className={`group relative flex min-h-[230px] flex-col justify-between overflow-hidden rounded-2xl border border-border bg-card p-6 sm:p-7 transition-colors hover:border-primary/35 ${
+                s.wide ? "md:col-span-2" : ""
+              }`}
+            >
+              <div className="flex items-start justify-between gap-4">
+                <span className={`flex h-11 w-11 items-center justify-center rounded-xl border ${tones[s.tone]}`}>{s.icon}</span>
+                {s.chips && (
+                  <ul className="hidden sm:flex flex-wrap justify-end gap-1.5 max-w-[60%]">
+                    {s.chips.map((c) => (
+                      <li key={c} className="rounded-full border border-border bg-secondary px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
+                        {c}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              <div className="mt-8">
+                <h3 className="text-lg font-semibold text-foreground">{s.title}</h3>
+                <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">{s.text}</p>
+              </div>
+            </motion.article>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Featured Projects ────────────────────────────────── */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <motion.div {...fadeUp}>
+          <SectionHeading
+            eyebrow="Portfolio"
+            title="Featured"
+            highlight="Projects."
+            description="A few things I've built, from wearable hardware to hackathon apps."
+            action={
+              <Link href="/projects" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+                View all projects <ArrowRight size={15} />
+              </Link>
+            }
+          />
+        </motion.div>
+        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {projects.slice(0, 3).map((p, i) => (
+            <ProjectCard key={p.slug} project={p} index={i} />
+          ))}
+        </div>
+      </section>
+
+      {/* ── Live developer dashboard ─────────────────────────── */}
+      <section id="activity" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 scroll-mt-20">
+        <motion.div {...fadeUp}>
+          <SectionHeading
+            eyebrow="Dashboard"
+            title="Live Coding"
+            highlight="Activity."
+            description="Pulled live from my GitHub and LeetCode profiles and refreshed automatically."
+            action={
+              <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+                Open full dashboard <ArrowRight size={15} />
+              </Link>
+            }
+          />
+        </motion.div>
+        <div className="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-5">
+          <motion.div {...fadeUp} className="lg:col-span-7 min-w-0">
+            <GitHubCard data={github.data} loading={github.loading} refreshing={github.refreshing} onRefresh={github.refresh} />
+          </motion.div>
+          <motion.div {...fadeUp} transition={{ duration: 0.5, delay: 0.08 }} className="lg:col-span-5 min-w-0">
+            <LeetCodeCard data={leetcode.data} loading={leetcode.loading} />
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── Let's Work Together ──────────────────────────────── */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-24">
+        <motion.div
+          {...fadeUp}
+          className="relative overflow-hidden rounded-3xl border border-border bg-card px-6 py-14 text-center sm:px-12"
+        >
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-0 h-64 w-[36rem] max-w-full -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+            style={{ background: "var(--glow)" }}
+          />
+          <h2 className="relative text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
+            Let&apos;s Work <span className="text-gradient">Together.</span>
+          </h2>
+          <p className="relative mx-auto mt-3 max-w-xl text-muted-foreground">
+            {siteConfig.availability}. If you&apos;re building something interesting, I&apos;d love to hear about it.
+          </p>
+          <div className="relative mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/contact"
+              className="group inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background transition-opacity hover:opacity-90"
+            >
+              Contact Me <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
+            </Link>
+            <a
+              href={siteConfig.socials.email}
+              className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:border-primary/40"
+            >
+              <Mail size={16} /> {siteConfig.email}
+            </a>
+          </div>
+        </motion.div>
+      </section>
     </div>
   );
 }

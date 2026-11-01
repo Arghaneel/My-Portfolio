@@ -14,12 +14,12 @@ export default function NotFound() {
         className="space-y-6 max-w-md"
       >
         {/* Visual Badge Icon */}
-        <div className="inline-flex p-5 rounded-full bg-destructive/10 text-destructive mb-2 animate-bounce">
+        <div className="inline-flex p-5 rounded-full border border-border bg-card text-primary mb-2">
           <Ban size={48} />
         </div>
 
         <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl">
-          404 — Page Not Found
+          404 — Page <span className="text-gradient">Not Found.</span>
         </h1>
 
         <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">
@@ -29,7 +29,7 @@ export default function NotFound() {
         <div className="pt-4">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold hover:bg-primary/95 shadow-lg shadow-primary/20 hover:-translate-y-0.5 transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-foreground text-background font-semibold hover:opacity-90 transition-opacity"
           >
             <ArrowLeft size={16} />
             Go Home

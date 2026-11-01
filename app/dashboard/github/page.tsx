@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import DashboardTabs from "@/components/dashboard-tabs";
+import SectionHeading from "@/components/section-heading";
 import Image from "next/image";
 import { useGithubStats } from "@/hooks/use-github-stats";
 import { Star, GitFork, ExternalLink } from "lucide-react";
@@ -10,23 +12,10 @@ import ContributionGraph from "@/components/contribution-graph";
 export default function GitHubDashboard() {
   const { data: github, loading, error, refreshing, refresh } = useGithubStats();
 
-  const dashboardNav = (
-    <div className="flex gap-2 border-b border-border/40 pb-4 mb-8">
-      <Link href="/dashboard" className="px-4 py-2 text-sm font-semibold text-muted-foreground hover:text-foreground">
-        Overview
-      </Link>
-      <Link href="/dashboard/github" className="px-4 py-2 text-sm font-bold text-primary border-b-2 border-primary">
-        GitHub
-      </Link>
-      <Link href="/dashboard/leetcode" className="px-4 py-2 text-sm font-semibold text-muted-foreground hover:text-foreground">
-        LeetCode
-      </Link>
-    </div>
-  );
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-24 sm:pt-16">
         <div className="h-10 w-48 bg-secondary animate-pulse rounded-lg mb-6" />
         <div className="h-64 bg-secondary animate-pulse rounded-2xl" />
       </div>
@@ -35,7 +24,7 @@ export default function GitHubDashboard() {
 
   if (error || !github) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8 text-center">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-24 sm:pt-16 text-center">
         <p className="text-destructive font-semibold">Failed to load GitHub stats.</p>
         <Link href="/dashboard" className="text-primary text-sm hover:underline mt-4 block">
           Back to Overview
@@ -45,10 +34,15 @@ export default function GitHubDashboard() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-24 sm:pt-16">
       <div>
-        <h1 className="text-4xl font-extrabold text-foreground">GitHub Statistics</h1>
-        <p className="text-muted-foreground text-sm mt-1">Live metrics from repository activity</p>
+        <SectionHeading
+          as="h1"
+          eyebrow="Dashboard"
+          title="GitHub"
+          highlight="Statistics."
+          description="Live metrics from my repositories and contribution history."
+        />
         {github.stale && (
           <p className="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-500 text-xs font-semibold">
             GitHub couldn&apos;t be reached for some data – showing the last synced values.
@@ -56,13 +50,15 @@ export default function GitHubDashboard() {
         )}
       </div>
 
-      <div className="mt-8">{dashboardNav}</div>
+      <div className="mt-8 mb-8">
+        <DashboardTabs active="github" />
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left Side: Profile Summary & Languages */}
         <div className="lg:col-span-4 space-y-6">
           {/* Profile Card */}
-          <div className="p-6 rounded-2xl bg-card border border-border shadow-sm text-center space-y-4">
+          <div className="p-6 rounded-2xl bg-card border border-border text-center space-y-4">
             <div className="relative w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-primary">
               <Image
                 src={github.profile.avatarUrl}
@@ -101,7 +97,7 @@ export default function GitHubDashboard() {
               href={github.profile.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/95 transition-all shadow-sm"
+              className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-foreground text-background text-sm font-semibold hover:opacity-90 transition-opacity"
             >
               View GitHub Profile
               <GitHubIcon size={16} />
@@ -109,7 +105,7 @@ export default function GitHubDashboard() {
           </div>
 
           {/* Languages Breakdown */}
-          <div className="p-6 rounded-2xl bg-card border border-border shadow-sm space-y-4">
+          <div className="p-6 rounded-2xl bg-card border border-border space-y-4">
             <h3 className="font-bold text-foreground">Language Percentages</h3>
             <div className="space-y-3.5">
               {github.languages.map((lang, idx) => (
@@ -150,7 +146,7 @@ export default function GitHubDashboard() {
                   href={repo.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-5 rounded-2xl bg-card border border-border hover:border-primary/30 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between"
+                  className="p-5 rounded-2xl bg-card border border-border hover:border-primary/40 transition-colors duration-200 flex flex-col justify-between"
                 >
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">

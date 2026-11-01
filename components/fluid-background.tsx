@@ -32,8 +32,8 @@ const CONFIG = {
 };
 
 // Smoke colours (linear-ish RGB, 0..1)
-const DARK_COLOR: [number, number, number] = [0.55, 0.9, 1.0]; // pale cyan-white glow
-const LIGHT_COLOR: [number, number, number] = [0.0, 0.42, 0.75]; // sky-600-ish tint
+const DARK_COLOR: [number, number, number] = [0.35, 1.0, 0.6]; // soft green glow (matches the accent)
+const LIGHT_COLOR: [number, number, number] = [0.0, 0.55, 0.3]; // green-600-ish tint
 
 /* ------------------------------------------------------------------ */
 /* Shaders                                                             */
