@@ -125,7 +125,7 @@ To animate a new element on a cinematic page, add a `data-b` attribute (`frame`,
 ## 📬 Contact
 
 [![Email](https://img.shields.io/badge/Email-arghaneeldas29%40gmail.com-D14836?logo=gmail&logoColor=white)](mailto:arghaneeldas29@gmail.com)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-arghaneel--das-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/arghaneel-das/)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-arghaneel--das-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/arghaneel-das-690b4b355)
 [![LeetCode](https://img.shields.io/badge/LeetCode-arghaneel__das-FFA116?logo=leetcode&logoColor=black)](https://leetcode.com/u/arghaneel_das/)
 [![Instagram](https://img.shields.io/badge/Instagram-arghaneel__das-E4405F?logo=instagram&logoColor=white)](https://instagram.com/arghaneel_das_29)
 
