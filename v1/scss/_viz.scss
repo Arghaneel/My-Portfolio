@@ -1,0 +1,518 @@
+// Chart components shared by the dashboard, the Live scene and paper mode.
+// Colours come from CSS variables (set per theme), validated with the dataviz palette checks:
+//   GitHub  = orange one-hue ramp, LeetCode = cyan one-hue ramp, difficulty = cyan ordinal ramp.
+
+@mixin viz-dark {
+    --v-ink: #f1efe9;
+    --v-ink2: #a3a29d;
+    --v-mute: #7a7975;
+    --v-grid: rgba(255, 255, 255, .07);
+    --v-base: rgba(255, 255, 255, .22);
+    --v-surface: #111110;
+    --v-cell0: #1e1e1d;
+    --v-tip-bg: #f1efe9;
+    --v-tip-ink: #0b0b0b;
+    --v-tip-ink2: #52514e;
+    --gh-1: #843219;
+    --gh-2: #ae411f;
+    --gh-3: #d54d22;
+    --gh-4: #ff5b1f;
+    --lc-1: #0c606d;
+    --lc-2: #158698;
+    --lc-3: #2dadc3;
+    --lc-4: #51d8f1;
+    --gh: #f35726;
+    --lc: #1ca3b9;
+    --gh-track: #2b1710;
+    --lc-track: #0e2a2f;
+    --lc-easy: #68def4;
+    --lc-medium: #31b0c6;
+    --lc-hard: #1d8293;
+}
+
+@mixin viz-light {
+    --v-ink: #141414;
+    --v-ink2: #52514e;
+    --v-mute: #6b6a66;
+    --v-grid: rgba(0, 0, 0, .07);
+    --v-base: rgba(0, 0, 0, .25);
+    --v-surface: #ffffff;
+    --v-cell0: #e7e5df;
+    --v-tip-bg: #141414;
+    --v-tip-ink: #f7f6f2;
+    --v-tip-ink2: #c3c2b7;
+    --gh-1: #f29676;
+    --gh-2: #e56d41;
+    --gh-3: #c94c18;
+    --gh-4: #9f3501;
+    --lc-1: #66b9cc;
+    --lc-2: #2f9bb2;
+    --lc-3: #077c91;
+    --lc-4: #025d6d;
+    --gh: #c04117;
+    --lc: #03889f;
+    --gh-track: #f7dccf;
+    --lc-track: #d3ebf0;
+    --lc-easy: #61b9ce;
+    --lc-medium: #1b8fa5;
+    --lc-hard: #056374;
+}
+
+/* --- swatches & keys (shared colour classes) --- */
+.gh-0 { fill: var(--v-cell0); background: var(--v-cell0); }
+.gh-1 { fill: var(--gh-1); background: var(--gh-1); }
+.gh-2 { fill: var(--gh-2); background: var(--gh-2); }
+.gh-3 { fill: var(--gh-3); background: var(--gh-3); }
+.gh-4 { fill: var(--gh-4); background: var(--gh-4); }
+.lc-0 { fill: var(--v-cell0); background: var(--v-cell0); }
+.lc-1 { fill: var(--lc-1); background: var(--lc-1); }
+.lc-2 { fill: var(--lc-2); background: var(--lc-2); }
+.lc-3 { fill: var(--lc-3); background: var(--lc-3); }
+.lc-4 { fill: var(--lc-4); background: var(--lc-4); }
+.lc-easy { background: var(--lc-easy); }
+.lc-medium { background: var(--lc-medium); }
+.lc-hard { background: var(--lc-hard); }
+
+.viz-empty {
+    color: var(--v-mute);
+    font-size: 14px;
+    padding: 24px 0;
+}
+
+.viz-axis {
+    font-family: var(--mono);
+    font-size: 10px;
+    fill: var(--v-mute);
+    letter-spacing: .04em;
+    font-variant-numeric: tabular-nums;
+}
+
+.viz-grid {
+    stroke: var(--v-grid);
+    stroke-width: 1;
+}
+
+.viz-base {
+    stroke: var(--v-base);
+    stroke-width: 1;
+}
+
+/* --- heatmap --- */
+.viz-scroll {
+    overflow-x: auto;
+    scrollbar-width: thin;
+    padding-bottom: 4px;
+}
+
+.viz-heat {
+    display: block;
+
+    .cell {
+        transition: stroke-width .15s;
+        stroke: var(--v-ink);
+        stroke-width: 0;
+    }
+
+    .cell.hot {
+        stroke-width: 1.5;
+    }
+}
+
+.viz-legend {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+    margin-top: 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--v-mute);
+
+    .sw {
+        width: 11px;
+        height: 11px;
+        border-radius: 2px;
+    }
+
+    span {
+        margin: 0 4px;
+    }
+
+    &.names {
+        justify-content: flex-start;
+        gap: 18px;
+        margin-top: 12px;
+        color: var(--v-ink2);
+    }
+
+    &.names .it {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+    }
+
+    &.names .sw {
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+    }
+}
+
+/* --- area / line --- */
+.viz-area {
+    display: block;
+    width: 100%;
+    height: auto;
+    outline: none;
+    touch-action: pan-y;
+
+    &:focus-visible {
+        outline: 2px solid var(--gh);
+        outline-offset: 4px;
+    }
+}
+
+.viz-line {
+    fill: none;
+    stroke-width: 2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+
+    &.gh { stroke: var(--gh); }
+    &.lc { stroke: var(--lc); }
+}
+
+.viz-wash {
+    stroke: none;
+    opacity: .1;
+
+    &.gh { fill: var(--gh); }
+    &.lc { fill: var(--lc); }
+}
+
+.viz-dot {
+    stroke: var(--v-surface);
+    stroke-width: 2;
+
+    &.gh { fill: var(--gh); }
+    &.lc { fill: var(--lc); }
+}
+
+.viz-cross {
+    stroke: var(--v-base);
+    stroke-width: 1;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* --- bars --- */
+.viz-bars {
+    display: grid;
+    gap: 12px;
+}
+
+.viz-bar-row {
+    display: grid;
+    grid-template-columns: minmax(70px, 110px) 1fr 44px;
+    align-items: center;
+    gap: 12px;
+    padding: 2px 0;
+    outline: none;
+    border-radius: 2px;
+
+    &:focus-visible {
+        outline: 2px solid var(--gh);
+        outline-offset: 2px;
+    }
+
+    &:hover .viz-bar,
+    &:focus-visible .viz-bar {
+        filter: brightness(1.15);
+    }
+}
+
+.viz-bar-label {
+    font-size: 14px;
+    color: var(--v-ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.viz-bar-track {
+    height: 10px;
+}
+
+.viz-bar {
+    display: block;
+    height: 10px;
+    border-radius: 0 4px 4px 0;
+
+    &.gh { background: var(--gh); }
+    &.lc { background: var(--lc); }
+}
+
+.viz-bar-val {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--v-ink2);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/* --- tall segmented bar --- */
+.viz-seg {
+    display: flex;
+    gap: 2px;
+    height: 28px;
+
+    .viz-seg-part {
+        display: flex;
+        align-items: center;
+        min-width: 4px;
+        padding: 0 8px;
+        border-radius: 4px;
+        font-family: var(--mono);
+        font-size: 11px;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: visible;
+        outline: none;
+        transition: filter .2s;
+    }
+
+    .viz-seg-part:hover,
+    .viz-seg-part:focus-visible {
+        filter: brightness(1.12);
+    }
+
+    .viz-seg-part:focus-visible {
+        outline: 2px solid var(--v-ink);
+        outline-offset: 2px;
+    }
+
+    .viz-seg-empty {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        padding: 0 10px;
+        border: 1px solid var(--v-grid);
+        border-radius: 4px;
+        color: var(--v-mute);
+        font-size: 12px;
+    }
+}
+
+/* --- meter --- */
+.viz-meter-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: var(--v-ink2);
+
+    b {
+        font-family: var(--mono);
+        font-weight: 500;
+        font-size: 12px;
+        color: var(--v-ink);
+        font-variant-numeric: tabular-nums;
+    }
+}
+
+.viz-meter {
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+
+    i {
+        display: block;
+        height: 100%;
+        border-radius: 4px;
+    }
+
+    &.gh { background: var(--gh-track); }
+    &.gh i { background: var(--gh); }
+    &.lc-easy,
+    &.lc-medium,
+    &.lc-hard { background: var(--lc-track); }
+    &.lc-easy i { background: var(--lc-easy); }
+    &.lc-medium i { background: var(--lc-medium); }
+    &.lc-hard i { background: var(--lc-hard); }
+}
+
+/* --- sparkline --- */
+.viz-spark {
+    display: block;
+}
+
+.viz-spark-line {
+    fill: none;
+    stroke: var(--v-mute);
+    stroke-width: 2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+}
+
+/* --- tooltip --- */
+.viz-tip {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 300;
+    pointer-events: none;
+    background: var(--v-tip-bg, #f1efe9);
+    color: var(--v-tip-ink, #0b0b0b);
+    padding: 8px 12px;
+    border-radius: 4px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .35);
+    font-size: 12px;
+    line-height: 1.4;
+    opacity: 0;
+    transition: opacity .12s;
+    max-width: 260px;
+
+    &.on {
+        opacity: 1;
+    }
+
+    .viz-tip-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    b {
+        font-weight: 600;
+    }
+
+    span {
+        color: var(--v-tip-ink2, #52514e);
+    }
+
+    .viz-key {
+        width: 12px;
+        height: 2px;
+        border-radius: 1px;
+        background: var(--gh);
+
+        &.lc { background: var(--lc); }
+        &.lc-easy { background: var(--lc-easy); }
+        &.lc-medium { background: var(--lc-medium); }
+        &.lc-hard { background: var(--lc-hard); }
+    }
+}
+
+/* --- table view --- */
+.viz-table {
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--v-ink2);
+
+    summary {
+        cursor: pointer;
+        font-family: var(--mono);
+        font-size: 10px;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        color: var(--v-mute);
+        width: max-content;
+        list-style: none;
+    }
+
+    summary::-webkit-details-marker {
+        display: none;
+    }
+
+    summary::before {
+        content: '+ ';
+    }
+
+    &[open] summary::before {
+        content: '– ';
+    }
+
+    summary:hover {
+        color: var(--v-ink);
+    }
+
+    table {
+        margin-top: 10px;
+        border-collapse: collapse;
+        width: 100%;
+        max-width: 520px;
+    }
+
+    caption {
+        text-align: left;
+        font-size: 12px;
+        color: var(--v-mute);
+        padding-bottom: 6px;
+    }
+
+    th,
+    td {
+        text-align: left;
+        padding: 5px 10px 5px 0;
+        border-bottom: 1px solid var(--v-grid);
+        font-variant-numeric: tabular-nums;
+    }
+
+    th {
+        font-weight: 500;
+        color: var(--v-ink);
+    }
+}
+
+/* --- stat tile --- */
+.stat-tile {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+
+    .st-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--v-ink2);
+    }
+
+    .st-label i {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex: none;
+        background: var(--gh);
+    }
+
+    .st-label i.lc {
+        background: var(--lc);
+    }
+
+    .st-value {
+        font-family: var(--sans, var(--body));
+        font-weight: 600;
+        font-size: clamp(28px, 3vw, 40px);
+        line-height: 1.05;
+        letter-spacing: -.02em;
+        color: var(--v-ink);
+    }
+
+    .st-sub {
+        font-size: 12px;
+        color: var(--v-mute);
+    }
+}
+
+.is-refreshing .viz-fade {
+    opacity: .55;
+    transition: opacity .3s;
+}

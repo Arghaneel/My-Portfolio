@@ -1,0 +1,51 @@
+name: Deploy portfolio
+
+on:
+  push:
+    branches: ["main"]
+  # refresh the dashboard snapshot every 6 hours
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Build dashboard snapshot (GitHub + LeetCode)
+        # never block a deploy: the dashboard also refreshes live in the browser
+        continue-on-error: true
+        run: node scripts/fetch-stats.mjs v1/data/stats.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_USERNAME: Arghaneel
+          LEETCODE_USERNAME: arghaneel_das
+          PREVIOUS_STATS_URL: ${{ steps.pages.outputs.base_url }}/data/stats.json
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'v1'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

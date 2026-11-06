@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ElectriFlow: Desktop app that digitises electricity billing, from meter reading to invoice. A project by Arghaneel Das.">
+    <meta name="theme-color" content="#050505">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="ElectriFlow - Projects - Arghaneel Das">
+    <meta property="og:description" content="ElectriFlow: Desktop app that digitises electricity billing, from meter reading to invoice. A project by Arghaneel Das.">
+    <link rel="icon" href="../../img/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="../../img/favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="../../img/favicon.png">
+    <title>ElectriFlow - Projects - Arghaneel Das</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script>
+        document.documentElement.classList.add('js', 'locked');
+    </script>
+
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+    <div id="loader" aria-hidden="true"><i class="lh l"></i><i class="lh r"></i><span class="ld-n mono">000</span></div>
+    <div class="grid-bg"></div>
+    <div class="grain"></div>
+    <div class="vignette"></div>
+
+    <div class="progress"></div>
+    <header class="hud">
+        <a href="../../index.html" class="logo">AD/BUILD</a>
+        <div class="status"><i></i><span id="status">standby</span></div>
+        <nav aria-label="Main">
+            <a href="../../index.html">Home</a>
+            <a href="../../about/index.html">About</a>
+            <a href="../../projects/index.html" aria-current="page">Projects</a>
+            <a href="../../achievements/index.html">Achievements</a>
+            <a href="../../dashboard/index.html">Dashboard</a>
+            <a href="../../contact/index.html">Contact</a>
+        </nav>
+        <span class="pct" id="pct">0%</span>
+        <a href="../../paper/index.html" class="paper">Paper ↗</a>
+        <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu"><span class="sr-only">Open menu</span><i></i><i></i></button>
+    </header>
+    <div class="menu" id="menu" hidden>
+        <nav aria-label="Main (mobile)">
+            <a href="../../index.html"><span class="mono">01</span>Home</a>
+            <a href="../../about/index.html"><span class="mono">02</span>About</a>
+            <a href="../../projects/index.html" aria-current="page"><span class="mono">03</span>Projects</a>
+            <a href="../../achievements/index.html"><span class="mono">04</span>Achievements</a>
+            <a href="../../dashboard/index.html"><span class="mono">05</span>Dashboard</a>
+            <a href="../../contact/index.html"><span class="mono">06</span>Contact</a>
+            <a href="../../paper/index.html"><span class="mono">↗</span>Paper mode</a>
+        </nav>
+        <div class="menu-foot mono"><a href="https://github.com/Arghaneel" target="_blank" rel="noopener">GitHub ↗</a><a href="https://www.linkedin.com/in/arghaneel-das/" target="_blank" rel="noopener">LinkedIn ↗</a><a href="https://leetcode.com/u/arghaneel_das/" target="_blank" rel="noopener">LeetCode ↗</a><a href="https://instagram.com/arghaneel_das" target="_blank" rel="noopener">Instagram ↗</a><a href="mailto:arghaneeldas29@gmail.com">Email ↗</a></div>
+    </div>
+
+    <div id="agents" aria-hidden="true"></div>
+
+    <main>
+        <section class="page-head">
+            <div class="wrap">
+                <p class="ph-k mono" data-b="type" data-l="Page" data-intro data-manual><b>PRJ_02</b> — Desktop app · Team project</p>
+                <h1 class="page-title small" aria-label="ElectriFlow"><span class="ln">ElectriFlow</span></h1>
+                <div class="ph-row">
+                    <p class="ph-lead" data-b="words" data-l="Intro" data-intro data-manual>Desktop app that digitises electricity billing, from meter reading to invoice.</p>
+                    <div class="tags" data-b="pop" data-l="Stack" data-intro data-manual><span>Java 17</span><span>Swing</span><span>FlatLaf</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="overview" class="scene">
+            <div class="ghost" aria-hidden="true">02</div>
+            <div class="wrap">
+                <div class="s-head">
+                    <span class="mono" data-b="type" data-l="Scene"><b>Scene 01</b> — Overview</span>
+                    <h2 class="s-title" data-b="type" data-l="Heading">The build <span class="sl">/</span></h2>
+                </div>
+                <div class="pd-grid">
+                    <div>
+                        <div class="row" data-b="frame" data-l="Category"><span>Category</span><span class="mono"><b>01</b>Desktop app</span></div>
+                        <div class="row" data-b="frame" data-l="Context"><span>Context</span><span class="mono"><b>02</b>Team project</span></div>
+                        <div class="row" data-b="frame" data-l="Stack"><span>Stack</span><span class="mono"><b>03</b>5 tools</span></div>
+                        <div class="row" data-b="frame" data-l="Source"><span>Source</span><span class="mono"><b>04</b>Public on GitHub</span></div>
+                        <h3 class="h3m mono" style="margin-top:36px" data-b="type" data-l="Label">/ Stack</h3>
+                        <div class="chips hot" data-b="pop" data-l="Stack"><span>Java 17</span><span>Swing</span><span>FlatLaf</span><span>JDBC</span><span>MySQL</span></div>
+                    </div>
+                    <div class="pd-lead">
+                        <p data-b="words" data-l="Overview">A Java Swing desktop application that digitises an electricity utility's workflow: customer registration, meter-reading entry, slab-based bill calculation, payment collection and invoice generation, with role-based access control.</p>
+                        <p data-b="words" data-l="Overview">Data lives in MySQL via JDBC, organised with object-oriented models and DAOs.</p>
+                        <div class="pd-links" data-b="pop" data-l="Links"><a href="https://github.com/Arghaneel/ELECTRICITY_BILL_GENERATOR-1AT24CS025-1AT24CS029-" class="btn solid" target="_blank" rel="noopener">Source on GitHub ↗</a><a href="../../projects/index.html" class="btn">All projects →</a></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="scene">
+            <div class="ghost" aria-hidden="true">KEY</div>
+            <div class="wrap">
+                <div class="s-head">
+                    <span class="mono" data-b="type" data-l="Scene"><b>Scene 02</b> — What it does</span>
+                    <h2 class="s-title" data-b="type" data-l="Heading">Key features <span class="sl">/</span></h2>
+                </div>
+                <div class="feat-grid">
+                    <div class="feat-card" data-b="frame" data-l="Feature 01"><span class="mono">Feature 01</span><p>Role-based logins: Admin, Employee and Viewer portals, plus a separate Customer portal.</p></div>
+                    <div class="feat-card" data-b="frame" data-l="Feature 02"><span class="mono">Feature 02</span><p>Slab-based billing engine with separate rules for Domestic and Commercial customers.</p></div>
+                    <div class="feat-card" data-b="frame" data-l="Feature 03"><span class="mono">Feature 03</span><p>Admin control room with KPI stats, configurable slab and tax rates, JSON backup/restore and CSV export.</p></div>
+                    <div class="feat-card" data-b="frame" data-l="Feature 04"><span class="mono">Feature 04</span><p>Usage analytics with custom line, bar and donut charts for bill trends and consumption.</p></div>
+                    <div class="feat-card" data-b="frame" data-l="Feature 05"><span class="mono">Feature 05</span><p>Invoice generation with print-to-PDF and HTML export.</p></div>
+                    <div class="feat-card" data-b="frame" data-l="Feature 06"><span class="mono">Feature 06</span><p>Demo mode that runs without MySQL using in-memory data.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="casefile" class="scene">
+            <div class="ghost" aria-hidden="true">FILE</div>
+            <div class="wrap">
+                <div class="s-head">
+                    <span class="mono" data-b="type" data-l="Scene"><b>Scene 03</b> — Case file</span>
+                    <h2 class="s-title" data-b="type" data-l="Heading">Inside the app <span class="sl">/</span></h2>
+                </div>
+                <div class="books">
+                    <article class="book" data-b="frame" data-l="ElectriFlow">
+                        <div class="stack" aria-hidden="true">
+                            <div class="sheet p3"><span class="sh-k">03 / Analytics</span><span class="sh-t">Usage trends</span><div class="sh-bars"><i style="height:40%"></i><i style="height:62%"></i><i style="height:48%"></i><i style="height:80%"></i><i style="height:56%"></i><i style="height:92%"></i></div></div>
+                            <div class="sheet p2"><span class="sh-k">02 / Billing engine</span><span class="sh-t">Slab rates</span><div class="sh-l"><span>Domestic</span><b>Slab rules</b></div><div class="sh-l"><span>Commercial</span><b>Slab rules</b></div><div class="sh-l"><span>Tax rates</span><b>Configurable</b></div><div class="sh-l"><span>Invoices</span><b>PDF / HTML</b></div></div>
+                            <div class="sheet p1"><span class="sh-k">01 / Access</span><span class="sh-t">Four portals</span><div class="sh-l"><span>Admin</span><b>Control room</b></div><div class="sh-l"><span>Employee</span><b>Readings</b></div><div class="sh-l"><span>Viewer</span><b>Read-only</b></div><div class="sh-l"><span>Customer</span><b>Bills &amp; pay</b></div></div>
+                            <div class="sheet cv"><span class="sh-k">Case study - v1.0</span><span class="sh-t">Electri<br>Flow</span><span class="sh-f">Java 17 · Swing · JDBC · MySQL</span></div>
+                        </div>
+                        <div>
+                            <div class="mono"><span>ElectriFlow</span><span>Case study - Team project</span></div>
+                            <h3>Four portals, one billing engine</h3>
+                            <p>A Java Swing desktop app that runs an electricity utility's workflow: customer registration, meter readings, slab-based billing for domestic and commercial customers, payments and invoices. Role-based portals, MySQL over JDBC with object-oriented models and DAOs, usage charts, JSON backup and CSV export, plus a demo mode that runs without a database.</p>
+                            <div class="tags"><span>Java 17</span><span>Swing + FlatLaf</span><span>MySQL</span></div>
+                            <a href="https://github.com/Arghaneel/ELECTRICITY_BILL_GENERATOR-1AT24CS025-1AT24CS029-" class="btn" target="_blank" rel="noopener">View source on GitHub ↗</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="more" class="scene">
+            <div class="wrap">
+                <div class="s-head">
+                    <span class="mono" data-b="type" data-l="Scene"><b>Scene 04</b> — Keep exploring</span>
+                </div>
+                <div class="pnav">
+                    <a href="../../projects/sixthsense/index.html" data-b="frame" data-l="Previous"><span class="mono">← Previous project</span><b>SixthSense</b></a>
+                    <a href="../../projects/carbon-grove/index.html" data-b="frame" data-l="Next"><span class="mono">Next project →</span><b>Carbon Grove</b></a>
+                </div>
+            </div>
+        </section>
+
+        <footer class="site-foot">
+            <div class="wrap">
+            <a class="next-link" href="../../projects/index.html">
+                <span class="mono">Back to — 03 / 06</span>
+                <span class="next-title">All projects <i>→</i></span>
+            </a>
+                <div class="foot-cols">
+                    <div>
+                        <h3 class="h3m mono">/ Get in touch</h3>
+                        <a class="foot-mail" href="mailto:arghaneeldas29@gmail.com">arghaneeldas29@gmail.com</a>
+                    </div>
+                    <div>
+                        <h3 class="h3m mono">/ Index</h3>
+                        <ul>
+                        <li><a href="../../index.html">Home</a></li>
+                        <li><a href="../../about/index.html">About</a></li>
+                        <li><a href="../../projects/index.html" aria-current="page">Projects</a></li>
+                        <li><a href="../../achievements/index.html">Achievements</a></li>
+                        <li><a href="../../dashboard/index.html">Dashboard</a></li>
+                        <li><a href="../../contact/index.html">Contact</a></li>
+                            <li><a href="../../img/Arghaneel_Das_CV.pdf" target="_blank" rel="noopener">CV (PDF) ↗</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="h3m mono">/ Elsewhere</h3>
+                        <ul>
+                        <li><a href="https://github.com/Arghaneel" target="_blank" rel="noopener">GitHub ↗</a></li>
+                        <li><a href="https://www.linkedin.com/in/arghaneel-das/" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+                        <li><a href="https://leetcode.com/u/arghaneel_das/" target="_blank" rel="noopener">LeetCode ↗</a></li>
+                        <li><a href="https://instagram.com/arghaneel_das" target="_blank" rel="noopener">Instagram ↗</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="copy mono"><span>© 2026 Arghaneel Das · Bangalore, India</span><span>Design inspired by <a href="https://zll.me/" target="_blank" rel="noopener">Zheng Lin Lei ↗</a> · <a href="../../paper/index.html">Paper mode</a></span></div>
+            </div>
+        </footer>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="../../js/script.js"></script>
+    <script src="../../js/nav.js"></script>
+</body>
+</html>

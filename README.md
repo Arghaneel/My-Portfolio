@@ -1,57 +1,41 @@
 # Arghaneel Das — Portfolio
 
-Personal portfolio of **Arghaneel Das**, Computer Science student at Atria Institute of Technology (CGPA 9.28), Applied AI Intern at DeepAgentLabs and Vice-President of OSCode.
+Static portfolio site: **HTML + SCSS/CSS + vanilla JavaScript**, with GSAP (from a CDN) for motion.
+No framework and no build step. GitHub Actions publishes it to GitHub Pages.
 
-**Pages:** Home · About (with experience timeline) · Projects (with case studies) · Achievements · Developer Dashboard (live GitHub + LeetCode) · Contact
+Live: https://arghaneel.github.io/My-Portfolio/
 
-The home page walks through the hero, a "Technological Foundation" marquee, a "Beyond Just Coding" bento grid, featured projects, a live GitHub + LeetCode activity section and a contact call-to-action. `/skills` and `/experience` redirect to the matching sections.
+```
+My-Portfolio/
+├── v1/                         the website (this folder is what gets published)
+│   ├── index.html              Home
+│   ├── about/ projects/ achievements/ dashboard/ contact/   one folder per page
+│   ├── paper/                  "Paper" mode: quiet single-page version
+│   ├── css/  scss/  js/  img/
+│   └── README.md               how to edit content, styles and animations
+├── scripts/fetch-stats.mjs     builds the live dashboard snapshot (GitHub + LeetCode) at deploy time
+└── .github/workflows/static.yml   deploys v1/ on every push to main and every 6 hours
+```
 
-## Highlights
+## Run it locally
 
-- **Live developer dashboard** – a preview on the home page plus the full `/dashboard`: GitHub profile, repositories, a full-year contribution calendar and an activity graph, plus LeetCode stats. Data is fetched server-side, refreshed every minute and re-synced in the browser when you come back to the tab. If an API is down, the last good data is shown instead of placeholder numbers.
-- **Interactive background** – a WebGL fluid simulation that follows the cursor, mounted once for every page and disabled for users who prefer reduced motion.
-- **Working contact form** – validated with Zod and delivered through Resend; if email isn't configured it tells the visitor and offers a pre-filled email instead of silently dropping the message.
-- Dark-first design (near-black surfaces with a green → teal accent), light theme toggle, responsive layout, SEO metadata and generated social-share image.
-
-## Tech stack
-
-Next.js (App Router) · React 19 · TypeScript · Tailwind CSS v4 · Framer Motion · Zod · react-hook-form · next-themes
-
-## Running locally
+Open `v1/index.html` in a browser, or serve the folder (closer to the live site):
 
 ```bash
-npm install
-cp .env.example .env.local   # optional – see below
-npm run dev
+npx serve v1          # or: cd v1 && python3 -m http.server 8000
 ```
 
-Open http://localhost:3000.
+## Deploy
 
-## Environment variables
+1. Push to `main`.
+2. Once, in the GitHub repo: **Settings → Pages → Source: GitHub Actions**.
 
-| Variable | Required | Purpose |
-| --- | --- | --- |
-| `GITHUB_USERNAME` | no | Defaults to `Arghaneel` |
-| `GITHUB_TOKEN` | no | Raises GitHub's limit from 60 to 5,000 requests/hour |
-| `LEETCODE_USERNAME` | no | Defaults to `arghaneel_das` |
-| `RESEND_API_KEY` | for the contact form | API key from [resend.com](https://resend.com) |
-| `CONTACT_TO_EMAIL` | no | Where contact messages go |
-| `CONTACT_FROM_EMAIL` | no | Sender address (must be a domain verified in Resend) |
-| `NEXT_PUBLIC_SITE_URL` | in production | Your deployed URL, used for link previews, canonical URLs, `/sitemap.xml` and `/robots.txt` |
+No API keys or secrets are needed; the workflow uses GitHub's built-in token.
 
-## Project structure
+## Edit
 
-```
-app/            routes, API routes (/api/github, /api/leetcode, /api/contact)
-components/     UI components (navbar, footer, section headings, tech marquee, project cards, timeline, GitHub/LeetCode stat cards, contribution graph, fluid background)
-hooks/          client data hooks with auto-refresh
-lib/            GitHub & LeetCode data fetching, validation
-lib/data/       all site content – edit these files to update the portfolio
-public/         resume.pdf and images
-```
+See [`v1/README.md`](v1/README.md). In short: page text is in each page's `index.html`; lists
+(projects, experience, achievements, skills) are arrays at the top of `v1/js/script.js` and
+`v1/js/paper.js`; styles are in `v1/scss/` (recompile with `npx sass`, commands in that README).
 
-To update content, edit the files in `lib/data/` (projects, experience, education, skills, site config).
-
-## Contact
-
-[arghaneeldas29@gmail.com](mailto:arghaneeldas29@gmail.com) · [GitHub](https://github.com/Arghaneel) · [LinkedIn](https://www.linkedin.com/in/arghaneel-das/)
+Design and motion system inspired by [Zheng Lin Lei](https://zll.me/).

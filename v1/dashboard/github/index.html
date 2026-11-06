@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Live GitHub stats of Arghaneel Das: contribution calendar, weekly activity, languages and recent repositories.">
+    <meta name="theme-color" content="#050505">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="GitHub - Live Dashboard - Arghaneel Das">
+    <meta property="og:description" content="Live GitHub stats of Arghaneel Das: contribution calendar, weekly activity, languages and recent repositories.">
+    <link rel="icon" href="../../img/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="../../img/favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="../../img/favicon.png">
+    <title>GitHub - Live Dashboard - Arghaneel Das</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://api.github.com" crossorigin>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/dashboard.css">
+</head>
+<body class="dash">
+    <div class="grid-bg on"></div>
+    <div class="grain"></div>
+    <div class="vignette"></div>
+
+    <div class="progress"></div>
+    <header class="hud">
+        <a href="../../index.html" class="logo">AD/BUILD</a>
+        <div class="status"><i id="liveDot"></i><span id="status">connecting…</span></div>
+        <nav aria-label="Main">
+            <a href="../../index.html">Home</a>
+            <a href="../../about/index.html">About</a>
+            <a href="../../projects/index.html">Projects</a>
+            <a href="../../achievements/index.html">Achievements</a>
+            <a href="../../dashboard/index.html" aria-current="page">Dashboard</a>
+            <a href="../../contact/index.html">Contact</a>
+        </nav>
+        <a href="../../paper/index.html" class="paper">Paper ↗</a>
+        <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu"><span class="sr-only">Open menu</span><i></i><i></i></button>
+    </header>
+    <div class="menu" id="menu" hidden>
+        <nav aria-label="Main (mobile)">
+            <a href="../../index.html"><span class="mono">01</span>Home</a>
+            <a href="../../about/index.html"><span class="mono">02</span>About</a>
+            <a href="../../projects/index.html"><span class="mono">03</span>Projects</a>
+            <a href="../../achievements/index.html"><span class="mono">04</span>Achievements</a>
+            <a href="../../dashboard/index.html" aria-current="page"><span class="mono">05</span>Dashboard</a>
+            <a href="../../contact/index.html"><span class="mono">06</span>Contact</a>
+            <a href="../../paper/index.html"><span class="mono">↗</span>Paper mode</a>
+        </nav>
+        <div class="menu-foot mono"><a href="https://github.com/Arghaneel" target="_blank" rel="noopener">GitHub ↗</a><a href="https://www.linkedin.com/in/arghaneel-das/" target="_blank" rel="noopener">LinkedIn ↗</a><a href="https://leetcode.com/u/arghaneel_das/" target="_blank" rel="noopener">LeetCode ↗</a><a href="https://instagram.com/arghaneel_das" target="_blank" rel="noopener">Instagram ↗</a><a href="mailto:arghaneeldas29@gmail.com">Email ↗</a></div>
+    </div>
+
+
+    <main class="wrap dash-main">
+        <section class="dash-head">
+            <div class="ghost" aria-hidden="true">LIVE</div>
+            <div class="s-head">
+                <span class="mono"><b>Page 05 / 06</b> — Live data — github.com/Arghaneel</span>
+                <h1 class="s-title">GitHub <span class="sl">/</span></h1>
+            </div>
+            <nav class="tabs" aria-label="Dashboard"><a href="../../dashboard/index.html">Overview</a><a href="../../dashboard/github/index.html" aria-current="page">GitHub</a><a href="../../dashboard/leetcode/index.html">LeetCode</a></nav>
+            <div class="controls">
+                <button id="refresh" class="btn" type="button">Refresh now ↻</button>
+                <span class="pill" id="pillGh"><i class="gh"></i><span>GitHub: loading…</span></span>
+                <span class="pill" id="pillLc"><i class="lc"></i><span>LeetCode: loading…</span></span>
+            </div>
+            <div class="card profile viz-fade" id="ghProfile"></div>
+
+            <div class="card viz-fade">
+                <div class="card-head">
+                    <h3>Contribution calendar</h3>
+                    <p id="ghCalSub">Last 12 months</p>
+                </div>
+                <div id="ghCal" class="chart"></div>
+                <div id="ghCalTable"></div>
+            </div>
+
+            <div class="split">
+                <div class="card c7 viz-fade">
+                    <div class="card-head">
+                        <h3>Weekly contributions</h3>
+                        <p id="ghWeekSub">Contributions per week, last 12 months</p>
+                    </div>
+                    <div id="ghWeekly" class="chart"></div>
+                    <div id="ghWeeklyTable"></div>
+                </div>
+                <div class="card c5 viz-fade">
+                    <div class="card-head">
+                        <h3>Languages</h3>
+                        <p>Share of my own public repositories, by main language</p>
+                    </div>
+                    <div id="ghLangs" class="chart"></div>
+                    <div id="ghLangsTable"></div>
+                </div>
+            </div>
+
+            <div class="card viz-fade">
+                <div class="card-head">
+                    <h3>Recently pushed repositories</h3>
+                    <p>Newest first</p>
+                </div>
+                <div class="repos" id="ghRepos"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-foot">
+            <div class="wrap">
+            <a class="next-link" href="../../contact/index.html">
+                <span class="mono">Next page — 06 / 06</span>
+                <span class="next-title">Contact <i>→</i></span>
+            </a>
+                <div class="foot-cols">
+                    <div>
+                        <h3 class="h3m mono">/ Get in touch</h3>
+                        <a class="foot-mail" href="mailto:arghaneeldas29@gmail.com">arghaneeldas29@gmail.com</a>
+                    </div>
+                    <div>
+                        <h3 class="h3m mono">/ Index</h3>
+                        <ul>
+                        <li><a href="../../index.html">Home</a></li>
+                        <li><a href="../../about/index.html">About</a></li>
+                        <li><a href="../../projects/index.html">Projects</a></li>
+                        <li><a href="../../achievements/index.html">Achievements</a></li>
+                        <li><a href="../../dashboard/index.html" aria-current="page">Dashboard</a></li>
+                        <li><a href="../../contact/index.html">Contact</a></li>
+                            <li><a href="../../img/Arghaneel_Das_CV.pdf" target="_blank" rel="noopener">CV (PDF) ↗</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="h3m mono">/ Elsewhere</h3>
+                        <ul>
+                        <li><a href="https://github.com/Arghaneel" target="_blank" rel="noopener">GitHub ↗</a></li>
+                        <li><a href="https://www.linkedin.com/in/arghaneel-das/" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+                        <li><a href="https://leetcode.com/u/arghaneel_das/" target="_blank" rel="noopener">LeetCode ↗</a></li>
+                        <li><a href="https://instagram.com/arghaneel_das" target="_blank" rel="noopener">Instagram ↗</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="copy mono"><span>© 2026 Arghaneel Das · Bangalore, India</span><span>Design inspired by <a href="https://zll.me/" target="_blank" rel="noopener">Zheng Lin Lei ↗</a> · <a href="../../paper/index.html">Paper mode</a></span></div>
+            </div>
+    </footer>
+
+    <script src="../../js/stats.js"></script>
+    <script src="../../js/dashboard.js"></script>
+    <script src="../../js/nav.js"></script>
+</body>
+</html>
